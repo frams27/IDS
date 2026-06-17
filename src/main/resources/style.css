@@ -1,0 +1,120 @@
+.root {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-background-color: #eeeeee;
+}
+
+.page-root,
+.screen-center {
+    -fx-background-color: #eeeeee;
+}
+
+.main-scroll,
+.main-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111111;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+.subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #444444;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+.card {
+    -fx-background-color: white;
+    -fx-border-color: #bdbdbd;
+    -fx-border-width: 1;
+    -fx-padding: 24;
+    -fx-spacing: 14;
+    -fx-alignment: center;
+}
+
+.button {
+    -fx-padding: 8 14;
+    -fx-min-width: 180;
+    -fx-background-color: #dddddd;
+    -fx-border-color: #999999;
+    -fx-border-width: 1;
+    -fx-text-fill: #111111;
+    -fx-cursor: hand;
+}
+
+.primary {
+    -fx-background-color: #cfcfcf;
+}
+
+.secondary {
+    -fx-background-color: #eeeeee;
+}
+
+.danger {
+    -fx-background-color: #e5c7c7;
+}
+
+.success {
+    -fx-background-color: #c9e2c9;
+}
+
+.text-field,
+.password-field,
+.text-area,
+.date-picker,
+.list-view {
+    -fx-border-color: #999999;
+    -fx-background-color: white;
+}
+
+.list-view {
+    -fx-pref-width: 680;
+}
+
+.selector-scroll {
+    -fx-background-color: white;
+    -fx-border-color: #999999;
+    -fx-border-width: 1;
+    -fx-pref-width: 680;
+}
+
+.selector-scroll > .viewport {
+    -fx-background-color: white;
+}
+
+.content-check-list {
+    -fx-padding: 10;
+    -fx-background-color: white;
+}
+
+.check-box {
+    -fx-alignment: center-left;
+    -fx-text-alignment: left;
+    -fx-padding: 4 6;
+}
+
+.selected-preview {
+    -fx-pref-width: 680;
+    -fx-background-color: white;
+    -fx-border-color: #999999;
+    -fx-border-width: 1;
+}
+
+.curriculum-box {
+    -fx-pref-width: 680;
+}
+
+.curriculum-section {
+    -fx-pref-width: 680;
+}
+
+.readonly-area {
+    -fx-background-color: #f8f8f8;
+    -fx-border-color: #999999;
+    -fx-text-fill: #111111;
+}
