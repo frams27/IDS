@@ -12,8 +12,8 @@ public class DueFAControl {
     private final BoundaryDBMS boundaryDBMS;
     private final SessioneCorrente sessioneCorrente;
     private int counterTentativi;
-    private String otpCorrente;
-    private AccountStudente accountOtp;
+    private String codiceOtpGenerato;
+    private int idAccountOtpGenerato = -1; //per inizializzare senza valori garbage
 
     public DueFAControl(BoundaryDBMS boundaryDBMS, SessioneCorrente sessioneCorrente) {
         this.boundaryDBMS = boundaryDBMS;
@@ -22,20 +22,20 @@ public class DueFAControl {
 
     public String generaOTP() throws Exception {
         AccountStudente account = sessioneCorrente.richiediAccountStudente();
-        otpCorrente = SecurityUtil.generateOtp();
-        accountOtp = account;
+        codiceOtpGenerato = SecurityUtil.generateOtp();
+        idAccountOtpGenerato = account.id(); //salvataggio acc per cui ha generato otp
         counterTentativi = 0;
-        return otpCorrente;
+        return codiceOtpGenerato;
     }
 
     public void verificaOTP(String codice) throws Exception {
         AccountStudente account = sessioneCorrente.richiediAccountStudente();
         ValidazioneControlSupport.richiediTesto(codice, "Inserisci il codice OTP.");
-        if (otpCorrente == null || accountOtp != account) {
+        if (codiceOtpGenerato == null || idAccountOtpGenerato != account.id()) {
             throw new ApplicationException("Genera prima un codice OTP.");
         }
         counterTentativi++;
-        if (otpCorrente.equals(codice.trim())) {
+        if (codiceOtpGenerato.equals(codice.trim())) {
             boundaryDBMS.aggiornaStatoLogin(account.id(), true);
             cancellaOTP();
             return;
@@ -49,8 +49,8 @@ public class DueFAControl {
     }
 
     private void cancellaOTP() {
-        otpCorrente = null;
-        accountOtp = null;
+        codiceOtpGenerato = null;
+        idAccountOtpGenerato = -1;
         counterTentativi = 0;
     }
 }
