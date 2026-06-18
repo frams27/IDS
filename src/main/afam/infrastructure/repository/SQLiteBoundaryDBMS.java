@@ -469,19 +469,26 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
 
     @Override
     public void registraVisualizzazione(int linkId, String etichettaVisualizzatore) throws SQLException {
+        
         try (Connection c = connect()) {
             c.setAutoCommit(false);
-            try (PreparedStatement ps = c.prepareStatement("INSERT INTO views(link_id,viewer_label) VALUES(?,?)")) {
-                ps.setInt(1, linkId);
-                ps.setString(2, etichettaVisualizzatore);
-                ps.executeUpdate();
+            try {
+                try (PreparedStatement ps = c.prepareStatement("INSERT INTO views(link_id,viewer_label) VALUES(?,?)")) {
+                    ps.setInt(1, linkId);
+                    ps.setString(2, etichettaVisualizzatore);
+                    ps.executeUpdate();
+                }
+                try (PreparedStatement ps = c.prepareStatement("UPDATE share_links SET view_count=view_count+1 WHERE id=?")) {
+                    ps.setInt(1, linkId);
+                    ps.executeUpdate();
+                }
+                c.commit();
+            } catch (Exception ex) {
+                c.rollback();
+                throw ex;
+            } finally {
+                c.setAutoCommit(true);
             }
-            try (PreparedStatement ps = c.prepareStatement("UPDATE share_links SET view_count=view_count+1 WHERE id=?")) {
-                ps.setInt(1, linkId);
-                ps.executeUpdate();
-            }
-            c.commit();
-            c.setAutoCommit(true);
         }
     }
 
