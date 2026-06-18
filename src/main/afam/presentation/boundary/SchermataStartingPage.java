@@ -10,13 +10,13 @@ public class SchermataStartingPage {
     private final Parent root;
     private final Button pulsanteRegistrati;
     private final Button pulsanteAccedi;
-    private final Button pulsanteAccediComeUtenteEsterno;
+    private final Button pulsanteEntraComeUtenteEsterno;
 
     public SchermataStartingPage(UiFactory ui) {
         this.pulsanteRegistrati = ui.button("Registrati", "primary");
         this.pulsanteAccedi = ui.button("Accedi", "primary");
-        this.pulsanteAccediComeUtenteEsterno = ui.button("Entra come soggetto esterno", "secondary");
-        VBox buttons = new VBox(12, pulsanteRegistrati, pulsanteAccedi, pulsanteAccediComeUtenteEsterno);
+        this.pulsanteEntraComeUtenteEsterno = ui.button("Entra come utente esterno", "secondary");
+        VBox buttons = new VBox(12, pulsanteRegistrati, pulsanteAccedi, pulsanteEntraComeUtenteEsterno);
         buttons.setAlignment(Pos.CENTER);
         buttons.setMaxWidth(360);
         this.root = ui.page("Identità Digitale AFAM", null, buttons);
@@ -25,5 +25,5 @@ public class SchermataStartingPage {
     public Parent mostra() { return root; }
     public Button pulsanteRegistrati() { return pulsanteRegistrati; }
     public Button pulsanteAccedi() { return pulsanteAccedi; }
-    public Button pulsanteAccediComeUtenteEsterno() { return pulsanteAccediComeUtenteEsterno; }
+    public Button pulsanteEntraComeUtenteEsterno() { return pulsanteEntraComeUtenteEsterno; }
 }

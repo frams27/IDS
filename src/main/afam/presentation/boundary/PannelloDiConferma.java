@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 public class PannelloDiConferma {
     private final Parent root;
@@ -17,7 +18,9 @@ public class PannelloDiConferma {
         testoMessaggio.setMaxWidth(Double.MAX_VALUE);
         this.pulsanteConferma = ui.button("Conferma", "primary");
         this.pulsanteAnnulla = ui.button("Annulla", "secondary");
-        this.root = ui.page("Conferma", null, testoMessaggio, new HBox(10, pulsanteConferma, pulsanteAnnulla));
+        VBox panel = new VBox(14, testoMessaggio, new HBox(10, pulsanteConferma, pulsanteAnnulla));
+        panel.getStyleClass().add("popup-card");
+        this.root = panel;
     }
 
     public Parent mostra() {

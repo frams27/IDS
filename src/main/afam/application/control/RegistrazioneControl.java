@@ -11,6 +11,7 @@ public class RegistrazioneControl {
     }
 
     public void registra(String email, String password, String confermaPassword) throws Exception {
+        
         String normalizedEmail = ValidazioneControlSupport.normalizzaEmail(email);
         ValidazioneControlSupport.richiediEmailValida(normalizedEmail);
         ValidazioneControlSupport.richiediTesto(password, "Inserisci la password.");
@@ -23,5 +24,6 @@ public class RegistrazioneControl {
             throw new ApplicationException("L'email inserita è già associata a un utente.");
         }
         boundaryDBMS.salvaNuovoAccount(normalizedEmail, password);
+        
     }
 }

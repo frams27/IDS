@@ -18,10 +18,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -83,6 +83,7 @@ public class AppNavigator {
 
     private UiFactory ui;
     private Stage stage;
+    private Parent currentScreenRoot;
     private Runnable ripristinaSchermataCorrente;
 
     public AppNavigator(HostServices hostServices) {
@@ -120,7 +121,7 @@ public class AppNavigator {
         try {
             boundaryDBMS.inizializza();
         } catch (Exception e) {
-            mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.ERROR, "Impossibile inizializzare il DBMS: " + e.getMessage(), null);
+            mostra(Vista.PANNELLO_DI_NOTIFICA, "Impossibile inizializzare il DBMS: " + e.getMessage(), null);
             stage.centerOnScreen();
             stage.show();
             return;
@@ -138,6 +139,7 @@ public class AppNavigator {
 
     private void setScreen(Parent root, String title) {
         String css = Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm();
+        currentScreenRoot = root;
         Scene scene = stage.getScene();
         if (scene == null) {
             scene = new Scene(root, 1100, 760);
@@ -150,11 +152,33 @@ public class AppNavigator {
         stage.setTitle("Identita Digitale AFAM - " + title);
     }
 
+    private void setPopup(Parent panel) {
+        String css = Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm();
+        if (currentScreenRoot == null) {
+            StackPane emptyRoot = new StackPane();
+            emptyRoot.setPrefSize(1100, 760);
+            emptyRoot.getStyleClass().add("page-root");
+            currentScreenRoot = emptyRoot;
+        }
+        StackPane overlay = new StackPane(panel);
+        overlay.getStyleClass().add("popup-overlay");
+        StackPane root = new StackPane(currentScreenRoot, overlay);
+        Scene scene = stage.getScene();
+        if (scene == null) {
+            scene = new Scene(root, 1100, 760);
+            scene.getStylesheets().add(css);
+            stage.setScene(scene);
+        } else {
+            scene.setRoot(root);
+            if (!scene.getStylesheets().contains(css)) scene.getStylesheets().add(css);
+        }
+    }
+
     private AccountStudente requireStudent() {
         try {
             return sessioneCorrente.richiediAccountStudente();
         } catch (Exception e) {
-            mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.WARNING, "Effettua prima il login.", (Runnable) () -> mostra(Vista.STARTING));
+            mostra(Vista.PANNELLO_DI_NOTIFICA, "Effettua prima il login.", (Runnable) () -> mostra(Vista.STARTING));
             throw e;
         }
     }
@@ -171,9 +195,11 @@ public class AppNavigator {
             case STARTING -> {
                 sessioneCorrente.terminaSessione();
                 SchermataStartingPage page = new SchermataStartingPage(ui);
-                page.pulsanteRegistrati().setOnAction(e -> mostra(Vista.REGISTRAZIONE));
+
+                page.pulsanteRegistrati().setOnAction(e -> mostra(Vista.REGISTRAZIONE)); /*Cliccando sul tasto viene
+                                                                                          mostrata la pagina di registrazione*/
                 page.pulsanteAccedi().setOnAction(e -> mostra(Vista.LOGIN));
-                page.pulsanteAccediComeUtenteEsterno().setOnAction(e -> mostra(Vista.ACCESSO_LINK));
+                page.pulsanteEntraComeUtenteEsterno().setOnAction(e -> mostra(Vista.ACCESSO_LINK));
                 setScreen(page.mostra(), "Schermata iniziale");
             }
             case REGISTRAZIONE -> {
@@ -181,7 +207,7 @@ public class AppNavigator {
                 page.pulsanteConfermaRegistrazione().setOnAction(e -> {
                     try {
                         registrazioneControl.registra(page.email(), page.password(), page.confermaPassword());
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Registrazione eseguita con successo!",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Registrazione eseguita con successo!",
                                 (Runnable) () -> mostra(Vista.STARTING));
                     } catch (Exception ex) {
                         handleError(ex, () -> mostra(Vista.STARTING));
@@ -208,12 +234,12 @@ public class AppNavigator {
                 page.pulsanteGeneraOTP().setOnAction(e -> runUserAction(() -> {
                     String otp = dueFAControl.generaOTP();
                     String email = sessioneCorrente.accountStudente().map(AccountStudente::email).orElse("");
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Codice OTP simulato inviato a " + email + ":\n\n" + otp);
+                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Codice OTP simulato inviato a " + email + ":\n\n" + otp);
                 }));
                 page.pulsanteVerificaOTP().setOnAction(e -> {
                     try {
                         dueFAControl.verificaOTP(page.codiceVerifica());
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Login effettuato!",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Login effettuato!",
                                 (Runnable) () -> mostra(Vista.HOME));
                     } catch (Exception ex) {
                         if ("Numero massimo di tentativi raggiunto. Sessione annullata.".equals(ex.getMessage())) {
@@ -229,11 +255,11 @@ public class AppNavigator {
                 PaginaAutenticazioneProviderEsterno page = new PaginaAutenticazioneProviderEsterno(ui, () -> mostra(Vista.LOGIN));
                 page.pulsanteEsitoPositivoProvider().setOnAction(e -> runUserAction(() -> {
                     autenticazioneEsternaControl.autenticaConProviderEsterno(page.emailProvider());
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Login effettuato!",
+                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Login effettuato!",
                             (Runnable) () -> mostra(Vista.HOME));
                 }));
                 page.pulsanteEsitoNegativoProvider().setOnAction(e -> {
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.WARNING, "Autenticazione tramite provider esterno fallita o annullata.",
+                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Autenticazione tramite provider esterno fallita o annullata.",
                             (Runnable) () -> mostra(Vista.LOGIN));
                 });
                 setScreen(page.mostra(), "Autenticazione con provider esterno");
@@ -243,7 +269,7 @@ public class AppNavigator {
                 page.pulsanteInvia().setOnAction(e -> runUserAction(() -> {
                     AccountStudente account = passwordDimenticataControl.richiediRecuperoPassword(page.email());
                     String token = passwordDimenticataControl.generaLinkRipristino(account);
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Link di ripristino inviato. Controlla la tua casella di posta!\nToken: " + token,
+                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Link di ripristino inviato. Controlla la tua casella di posta!\nToken: " + token,
                             (Runnable) () -> mostra(Vista.NUOVA_PASSWORD, account, token));
                 }));
                 setScreen(page.mostra(), "Pagina recupera password");
@@ -254,7 +280,7 @@ public class AppNavigator {
                 PaginaNuovaPassword page = new PaginaNuovaPassword(ui, () -> mostra(Vista.LOGIN));
                 page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                     passwordDimenticataControl.impostaNuovaPassword(account, token, page.nuovaPassword(), page.confermaNuovaPassword());
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Password modificata con successo!",
+                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Password modificata con successo!",
                             (Runnable) () -> mostra(Vista.LOGIN));
                 }));
                 setScreen(page.mostra(), "Pagina nuova password");
@@ -276,10 +302,9 @@ public class AppNavigator {
                 setScreen(page.mostra(), "Errore di connessione");
             }
             case PANNELLO_DI_NOTIFICA -> {
-                Alert.AlertType tipo = (Alert.AlertType) dati[0];
-                String messaggio = (String) dati[1];
-                Runnable azioneDopoOk = dati.length > 2 ? (Runnable) dati[2] : null;
-                PannelloDiNotifica page = new PannelloDiNotifica(ui, tipo, messaggio);
+                String messaggio = (String) dati[0];
+                Runnable azioneDopoOk = dati.length > 1 ? (Runnable) dati[1] : null;
+                PannelloDiNotifica page = new PannelloDiNotifica(ui, messaggio);
                 page.pulsanteOk().setOnAction(e -> {
                     if (azioneDopoOk != null) {
                         azioneDopoOk.run();
@@ -287,7 +312,7 @@ public class AppNavigator {
                         ripristinaSchermataCorrente.run();
                     }
                 });
-                setScreen(page.mostra(), "Notifica");
+                setPopup(page.mostra());
             }
             case PANNELLO_DI_CONFERMA -> {
                 String messaggio = (String) dati[0];
@@ -306,7 +331,7 @@ public class AppNavigator {
                         ripristinaSchermataCorrente.run();
                     }
                 });
-                setScreen(page.mostra(), "Conferma");
+                setPopup(page.mostra());
             }
             case GESTIONE_PROFILO -> {
                 AccountStudente account = requireStudent();
@@ -346,7 +371,7 @@ public class AppNavigator {
                     Parent root = page.mostra(items);
                     page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                         eliminaContenutiControl.eliminaContenuti(new ArrayList<>(page.listaContenutiEliminabili().getSelectionModel().getSelectedItems()));
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Contenuti eliminati con successo.",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Contenuti eliminati con successo.",
                                 (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
                     }));
                     setScreen(root, "Contenuti eliminabili");
@@ -363,7 +388,7 @@ public class AppNavigator {
                     page.pulsanteSpostaGiu().setOnAction(e -> BoundarySupport.spostaSelezionato(page.listaContenuti(), 1));
                     page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                         organizzaContenutiControl.salvaNuovoOrdine(new ArrayList<>(items));
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Nuova disposizione salvata con successo.",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Nuova disposizione salvata con successo.",
                                 (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
                     }));
                     setScreen(root, "Organizza contenuti");
@@ -378,7 +403,7 @@ public class AppNavigator {
                     Parent root = page.mostra(datiCurriculari);
                     page.pulsanteSalva().setOnAction(e -> runUserAction(() -> {
                         modificaDatiCurriculariControl.salvaDatiCurriculari(requireStudent(), page.biografia(), page.titoliDiStudio(), page.esperienzeArtisticheEFormative());
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Dati curriculari aggiornati con successo.",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Dati curriculari aggiornati con successo.",
                                 (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
                     }));
                     setScreen(root, "Modifica dati curriculari");
@@ -390,7 +415,7 @@ public class AppNavigator {
                 PaginaModificaPassword page = new PaginaModificaPassword(ui, () -> mostra(Vista.GESTIONE_PROFILO));
                 page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                     modificaPasswordControl.modificaPassword(page.vecchiaPassword(), page.nuovaPassword(), page.confermaNuovaPassword());
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Modifica avvenuta con successo.",
+                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Modifica avvenuta con successo.",
                             (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
                 }));
                 setScreen(page.mostra(), "Modifica password");
@@ -412,7 +437,7 @@ public class AppNavigator {
                 try {
                     ObservableList<ContenutoMultimediale> contents = FXCollections.observableArrayList(contenutiVisualizzabiliControl.recuperaContenutiDisponibili(requireStudent()));
                     if (contents.isEmpty()) {
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Carica almeno un contenuto prima di generare un link.",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Carica almeno un contenuto prima di generare un link.",
                                 (Runnable) () -> mostra(Vista.CONTENUTI_VISUALIZZABILI));
                         return;
                     }
@@ -421,7 +446,7 @@ public class AppNavigator {
                     page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                         List<ContenutoMultimediale> selected = page.contenutiSelezionati();
                         contenutiVisualizzabiliControl.verificaSelezione(selected);
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Selezione avvenuta con successo!",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Selezione avvenuta con successo!",
                                 (Runnable) () -> mostra(Vista.PARAMETRI_FACOLTATIVI, selected));
                     }));
                     setScreen(root, "Pannello contenuti visualizzabili");
@@ -446,7 +471,7 @@ public class AppNavigator {
                     ClipboardContent content = new ClipboardContent();
                     content.putString(page.linkGenerato());
                     Clipboard.getSystemClipboard().setContent(content);
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Link copiato!",
+                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Link copiato!",
                             (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                 });
                 setScreen(root, "Link generato");
@@ -455,7 +480,7 @@ public class AppNavigator {
                 try {
                     ObservableList<LinkDiCondivisione> links = FXCollections.observableArrayList(feedbackContenutiControl.recuperaLink(requireStudent()));
                     if (links.isEmpty()) {
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "I tuoi contenuti non sono ancora stati visualizzati.",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "I tuoi contenuti non sono ancora stati visualizzati.",
                                 (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                         return;
                     }
@@ -476,7 +501,7 @@ public class AppNavigator {
                 try {
                     ObservableList<LinkDiCondivisione> links = FXCollections.observableArrayList(disattivaLinkControl.recuperaLinkAttivi(requireStudent()));
                     if (links.isEmpty()) {
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Nessun link attivo presente.",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Nessun link attivo presente.",
                                 (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                         return;
                     }
@@ -484,7 +509,7 @@ public class AppNavigator {
                     Parent root = page.mostra(links);
                     page.pulsanteDisattiva().setOnAction(e -> runUserAction(() -> {
                         disattivaLinkControl.disattivaLink(page.listaLinkAttivi().getSelectionModel().getSelectedItem());
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Link disattivato con successo.",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Link disattivato con successo.",
                                 (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                     }));
                     setScreen(root, "Link attivi");
@@ -530,7 +555,7 @@ public class AppNavigator {
         mostra(Vista.PANNELLO_DI_CONFERMA, "Desideri effettuare il logout?", (Runnable) () -> {
             runUserAction(() -> {
                 logoutControl.eseguiLogout();
-                mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Logout effettuato con successo.",
+                mostra(Vista.PANNELLO_DI_NOTIFICA, "Logout effettuato con successo.",
                         (Runnable) () -> mostra(Vista.STARTING));
             });
         }, null);
@@ -544,7 +569,7 @@ public class AppNavigator {
         if (file != null) {
             runUserAction(() -> {
                 aggiungiContenutiControl.aggiungiContenuto(requireStudent(), file.toPath(), tipoContenuto);
-                mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Caricamento avvenuto con successo.",
+                mostra(Vista.PANNELLO_DI_NOTIFICA, "Caricamento avvenuto con successo.",
                         (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
             });
         }
@@ -574,9 +599,9 @@ public class AppNavigator {
 
     private void handleError(Exception ex, Runnable azioneDopoOk) {
         if (ex instanceof ApplicationException) {
-            mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.WARNING, ex.getMessage(), azioneDopoOk);
+            mostra(Vista.PANNELLO_DI_NOTIFICA, ex.getMessage(), azioneDopoOk);
         } else {
-            mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.ERROR, ex.getMessage() == null ? ex.toString() : ex.getMessage(), azioneDopoOk);
+            mostra(Vista.PANNELLO_DI_NOTIFICA, ex.getMessage() == null ? ex.toString() : ex.getMessage(), azioneDopoOk);
         }
     }
 
