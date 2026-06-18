@@ -17,11 +17,11 @@ public class RegistrazioneControl {
         ValidazioneControlSupport.richiediTesto(password, "Inserisci la password.");
         ValidazioneControlSupport.richiediTesto(confermaPassword, "Inserisci la conferma password.");
         if (!password.equals(confermaPassword)) {
-            throw new ApplicationException("Le due password non corrispondono.");
+            throw new ApplicationException("ATTENZIONE: Le due password non corrispondono.");
         }
         ValidazioneControlSupport.richiediPasswordSicura(password);
         if (boundaryDBMS.emailEsiste(normalizedEmail)) {
-            throw new ApplicationException("L'email inserita è già associata a un utente.");
+            throw new ApplicationException("ATTENZIONE: L'email inserita è già associata a un utente.");
         }
         boundaryDBMS.salvaNuovoAccount(normalizedEmail, password);
         

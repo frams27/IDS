@@ -11,11 +11,15 @@ public class PannelloDiNotifica {
     private final Button pulsanteOk;
 
     public PannelloDiNotifica(UiFactory ui, String messaggio) {
+        //qui inseriramo il titolo del pannello di notifica
+        Label titoloNotifica = new Label("Pannello di Notifica");
+        titoloNotifica.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        //qui inseriamo il messaggio di notifica
         Label testoMessaggio = new Label(messaggio);
         testoMessaggio.setWrapText(true);
         testoMessaggio.setMaxWidth(Double.MAX_VALUE);
         this.pulsanteOk = ui.button("OK", "primary");
-        VBox panel = new VBox(14, testoMessaggio, pulsanteOk);
+        VBox panel = new VBox(14, titoloNotifica, testoMessaggio, pulsanteOk);
         panel.getStyleClass().add("popup-card");
         this.root = panel;
     }
