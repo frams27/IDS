@@ -46,7 +46,6 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
                         email TEXT NOT NULL UNIQUE,
                         password_hash TEXT NOT NULL,
                         salt TEXT NOT NULL,
-                        otp TEXT,
                         is_logged INTEGER NOT NULL DEFAULT 0,
                         recovery_token TEXT,
                         created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -220,29 +219,10 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
 
     @Override
     public void aggiornaStatoLogin(int accountStudenteId, boolean logged) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("UPDATE accounts SET is_logged=?, otp=NULL WHERE id=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("UPDATE accounts SET is_logged=? WHERE id=?")) {
             ps.setInt(1, logged ? 1 : 0);
             ps.setInt(2, accountStudenteId);
             ps.executeUpdate();
-        }
-    }
-
-    @Override
-    public void salvaOTP(int accountStudenteId, String otp) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("UPDATE accounts SET otp=? WHERE id=?")) {
-            ps.setString(1, otp);
-            ps.setInt(2, accountStudenteId);
-            ps.executeUpdate();
-        }
-    }
-
-    @Override
-    public boolean verificaOTP(int accountStudenteId, String otp) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT otp FROM accounts WHERE id=?")) {
-            ps.setInt(1, accountStudenteId);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() && otp != null && otp.equals(rs.getString("otp"));
-            }
         }
     }
 

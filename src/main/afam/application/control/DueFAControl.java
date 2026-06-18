@@ -7,9 +7,13 @@ import afam.domain.repository.BoundaryDBMS;
 import afam.util.SecurityUtil;
 
 public class DueFAControl {
+    private static final int MAX_TENTATIVI = 5;
+
     private final BoundaryDBMS boundaryDBMS;
     private final SessioneCorrente sessioneCorrente;
     private int counterTentativi;
+    private String otpCorrente;
+    private AccountStudente accountOtp;
 
     public DueFAControl(BoundaryDBMS boundaryDBMS, SessioneCorrente sessioneCorrente) {
         this.boundaryDBMS = boundaryDBMS;
@@ -18,26 +22,35 @@ public class DueFAControl {
 
     public String generaOTP() throws Exception {
         AccountStudente account = sessioneCorrente.richiediAccountStudente();
-        String otp = SecurityUtil.generateOtp();
-        boundaryDBMS.salvaOTP(account.id(), otp);
+        otpCorrente = SecurityUtil.generateOtp();
+        accountOtp = account;
         counterTentativi = 0;
-        return otp;
+        return otpCorrente;
     }
 
     public void verificaOTP(String codice) throws Exception {
         AccountStudente account = sessioneCorrente.richiediAccountStudente();
         ValidazioneControlSupport.richiediTesto(codice, "Inserisci il codice OTP.");
+        if (otpCorrente == null || accountOtp != account) {
+            throw new ApplicationException("Genera prima un codice OTP.");
+        }
         counterTentativi++;
-        if (boundaryDBMS.verificaOTP(account.id(), codice.trim())) {
+        if (otpCorrente.equals(codice.trim())) {
             boundaryDBMS.aggiornaStatoLogin(account.id(), true);
-            counterTentativi = 0;
+            cancellaOTP();
             return;
         }
-        if (counterTentativi >= 5) {
+        if (counterTentativi >= MAX_TENTATIVI) {
             sessioneCorrente.terminaSessione();
-            counterTentativi = 0;
+            cancellaOTP();
             throw new ApplicationException("Numero massimo di tentativi raggiunto. Sessione annullata.");
         }
         throw new ApplicationException("Codice errato");
+    }
+
+    private void cancellaOTP() {
+        otpCorrente = null;
+        accountOtp = null;
+        counterTentativi = 0;
     }
 }

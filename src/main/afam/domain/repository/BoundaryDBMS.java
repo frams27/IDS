@@ -29,8 +29,6 @@ public interface BoundaryDBMS {
     void aggiornaPassword(int accountStudenteId, String nuovaPassword) throws SQLException;
     void aggiornaStatoLogin(int accountStudenteId, boolean logged) throws SQLException;
 
-    void salvaOTP(int accountStudenteId, String otp) throws SQLException;
-    boolean verificaOTP(int accountStudenteId, String otp) throws SQLException;
 
     void salvaTokenRipristino(int accountStudenteId, String token) throws SQLException;
     boolean verificaTokenRipristino(int accountStudenteId, String token) throws SQLException;
