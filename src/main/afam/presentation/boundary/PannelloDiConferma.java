@@ -12,13 +12,15 @@ public class PannelloDiConferma {
     private final Button pulsanteConferma;
     private final Button pulsanteAnnulla;
 
-    public PannelloDiConferma(UiFactory ui, String messaggio) {
-        Label testoMessaggio = new Label(messaggio);
+    public PannelloDiConferma(UiFactory ui, String msg) {
+        Label titoloConferma = new Label("Pannello di Conferma");
+        titoloConferma.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;"); //da spostare nel css
+        Label testoMessaggio = new Label(msg);
         testoMessaggio.setWrapText(true);
         testoMessaggio.setMaxWidth(Double.MAX_VALUE);
         this.pulsanteConferma = ui.button("Conferma", "primary");
         this.pulsanteAnnulla = ui.button("Annulla", "secondary");
-        VBox panel = new VBox(14, testoMessaggio, new HBox(10, pulsanteConferma, pulsanteAnnulla));
+        VBox panel = new VBox(14, titoloConferma, testoMessaggio, new HBox(10, pulsanteConferma, pulsanteAnnulla));
         panel.getStyleClass().add("popup-card");
         this.root = panel;
     }

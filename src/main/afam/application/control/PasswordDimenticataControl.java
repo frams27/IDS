@@ -20,7 +20,7 @@ public class PasswordDimenticataControl {
         ValidazioneControlSupport.richiediEmailValida(normalizedEmail);
         Optional<AccountStudente> account = boundaryDBMS.cercaAccountPerEmail(normalizedEmail);
         if (account.isEmpty()) {
-            throw new ApplicationException("L'email inserita non è associata ad alcun account.");
+            throw new ApplicationException("ATTENZIONE: l'email inserita non è valida.");
         }
         return account.get();
     }
@@ -38,7 +38,7 @@ public class PasswordDimenticataControl {
             throw new ApplicationException("Link di ripristino non valido.");
         }
         if (!nuovaPassword.equals(confermaNuovaPassword)) {
-            throw new ApplicationException("Le due password non corrispondono.");
+            throw new ApplicationException("ATTENZIONE: le due password non corrispondono!");
         }
         ValidazioneControlSupport.richiediPasswordSicura(nuovaPassword);
         boundaryDBMS.aggiornaPassword(account.id(), nuovaPassword);

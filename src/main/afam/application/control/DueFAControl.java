@@ -32,7 +32,7 @@ public class DueFAControl {
         AccountStudente account = sessioneCorrente.richiediAccountStudente();
         ValidazioneControlSupport.richiediTesto(codice, "Inserisci il codice OTP.");
         if (codiceOtpGenerato == null || idAccountOtpGenerato != account.id()) {
-            throw new ApplicationException("Genera prima un codice OTP.");
+            throw new ApplicationException("Clicca sul pulsante Genera OTP per generare il codice");
         }
         counterTentativi++;
         if (codiceOtpGenerato.equals(codice.trim())) {

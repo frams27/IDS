@@ -28,7 +28,7 @@ public class AggiungiContenutiControl {
     public void aggiungiContenuto(AccountStudente account, Path fileSelezionato, String tipo) throws Exception {
         if (fileSelezionato == null) throw new ApplicationException("Nessun file selezionato.");
         long dimensione = Files.size(fileSelezionato);
-        if (dimensione > MAX_FILE_SIZE_BYTES) throw new ApplicationException("La dimensione massima consentita è 512 MB.");
+        if (dimensione > MAX_FILE_SIZE_BYTES) throw new ApplicationException("ERRORE: la dimensione massima consentita è 512 MB");
         String formato = FileUtil.extension(fileSelezionato.getFileName().toString());
         if (!formatoConsentito(tipo, formato)) throw new ApplicationException("Formato non supportato per la categoria selezionata.");
         Files.createDirectories(boundaryDBMS.cartellaUpload());

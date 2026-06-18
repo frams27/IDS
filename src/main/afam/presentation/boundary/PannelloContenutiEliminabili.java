@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.layout.HBox;
 
 public class PannelloContenutiEliminabili {
     private final UiFactory ui;
@@ -14,6 +15,7 @@ public class PannelloContenutiEliminabili {
     private Parent root;
     private ListView<ContenutoMultimediale> listaContenutiEliminabili;
     private Button pulsanteConferma;
+    private Button pulsanteAnnulla;
 
     public PannelloContenutiEliminabili(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
         this.ui = ui;
@@ -24,10 +26,14 @@ public class PannelloContenutiEliminabili {
         this.listaContenutiEliminabili = BoundarySupport.listaContenuti(contenuti);
         listaContenutiEliminabili.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         this.pulsanteConferma = ui.button("Conferma", "danger");
-        this.root = ui.page("Contenuti eliminabili", tornaAllaGestioneProfilo, listaContenutiEliminabili, pulsanteConferma);
+        this.pulsanteAnnulla = ui.button("Annulla", "secondary");
+        this.root = ui.page("Contenuti eliminabili", tornaAllaGestioneProfilo,
+                listaContenutiEliminabili,
+                new HBox(10, pulsanteConferma, pulsanteAnnulla));
         return root;
     }
 
     public ListView<ContenutoMultimediale> listaContenutiEliminabili() { return listaContenutiEliminabili; }
     public Button pulsanteConferma() { return pulsanteConferma; }
+    public Button pulsanteAnnulla() { return pulsanteAnnulla; }
 }

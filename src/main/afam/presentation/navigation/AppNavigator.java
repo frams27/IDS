@@ -131,7 +131,7 @@ public class AppNavigator {
         stage.setMinHeight(760);
         stage.setWidth(1100);
         stage.setHeight(760);
-        stage.setResizable(false);
+        stage.setResizable(true);
         mostra(Vista.STARTING);
         stage.centerOnScreen();
         stage.show();
@@ -362,6 +362,7 @@ public class AppNavigator {
                 page.pulsanteAggiungiAudio().setOnAction(e -> selezionaECaricaFile("Audio"));
                 page.pulsanteAggiungiFoto().setOnAction(e -> selezionaECaricaFile("Foto"));
                 page.pulsanteAggiungiVideo().setOnAction(e -> selezionaECaricaFile("Video"));
+                page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.GESTIONE_PROFILO));
                 setScreen(page.mostra(), "Aggiungi contenuti");
             }
             case CONTENUTI_ELIMINABILI -> {
@@ -371,9 +372,10 @@ public class AppNavigator {
                     Parent root = page.mostra(items);
                     page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                         eliminaContenutiControl.eliminaContenuti(new ArrayList<>(page.listaContenutiEliminabili().getSelectionModel().getSelectedItems()));
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Contenuti eliminati con successo.",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Eliminazione avvenuta con successo!",
                                 (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
                     }));
+                    page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.GESTIONE_PROFILO));
                     setScreen(root, "Contenuti eliminabili");
                 } catch (Exception ex) {
                     handleError(ex);
@@ -406,6 +408,7 @@ public class AppNavigator {
                         mostra(Vista.PANNELLO_DI_NOTIFICA, "Dati curriculari aggiornati con successo.",
                                 (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
                     }));
+                    page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.GESTIONE_PROFILO));
                     setScreen(root, "Modifica dati curriculari");
                 } catch (Exception ex) {
                     handleError(ex);
@@ -418,6 +421,7 @@ public class AppNavigator {
                     mostra(Vista.PANNELLO_DI_NOTIFICA, "Modifica avvenuta con successo.",
                             (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
                 }));
+                page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.GESTIONE_PROFILO));
                 setScreen(page.mostra(), "Modifica password");
             }
             case GESTIONE_CONDIVISIONE -> {
@@ -551,7 +555,7 @@ public class AppNavigator {
         }
     }
 
-    private void confermaLogout() {
+    private void confermaLogout() { //gestito come metodo e non come case (page) perché non esiste una pagina di logout
         mostra(Vista.PANNELLO_DI_CONFERMA, "Desideri effettuare il logout?", (Runnable) () -> {
             runUserAction(() -> {
                 logoutControl.eseguiLogout();
@@ -569,7 +573,7 @@ public class AppNavigator {
         if (file != null) {
             runUserAction(() -> {
                 aggiungiContenutiControl.aggiungiContenuto(requireStudent(), file.toPath(), tipoContenuto);
-                mostra(Vista.PANNELLO_DI_NOTIFICA, "Caricamento avvenuto con successo.",
+                mostra(Vista.PANNELLO_DI_NOTIFICA, "Caricamento avvenuto con successo",
                         (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
             });
         }
