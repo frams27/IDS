@@ -12,9 +12,9 @@ final class ValidazioneControlSupport {
         return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
     }
 
-    static void richiediTesto(String value, String message) throws ApplicationException {
+    static void richiediTesto(String value, String msg) throws ApplicationException {
         if (value == null || value.trim().isEmpty()) {
-            throw new ApplicationException(message);
+            throw new ApplicationException(msg);
         }
     }
 
@@ -27,7 +27,7 @@ final class ValidazioneControlSupport {
 
     static void richiediPasswordSicura(String password) throws ApplicationException {
         if (!SecurityUtil.isStrongPassword(password)) {
-            throw new ApplicationException("La password deve contenere almeno una minuscola, una maiuscola, un numero e un carattere speciale.");
+            throw new ApplicationException("La password dell'account deve contenere almeno una lettera minuscola, una lettera maiuscola, un numero e un carattere speciale (es. “.”, “!”, “&”).");
         }
     }
 

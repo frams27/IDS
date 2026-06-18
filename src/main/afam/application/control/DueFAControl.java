@@ -38,6 +38,6 @@ public class DueFAControl {
             counterTentativi = 0;
             throw new ApplicationException("Numero massimo di tentativi raggiunto. Sessione annullata.");
         }
-        throw new ApplicationException("Codice errato.");
+        throw new ApplicationException("Codice errato");
     }
 }
