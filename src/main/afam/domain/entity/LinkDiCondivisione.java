@@ -51,34 +51,6 @@ public final class LinkDiCondivisione {
         return numeroVisualizzazioni;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public int getAccountStudenteId() {
-        return accountStudenteId;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getDescrizione() {
-        return descrizione;
-    }
-
-    public LocalDate getDataDiScadenza() {
-        return dataDiScadenza;
-    }
-
-    public boolean isAttivo() {
-        return attivo;
-    }
-
-    public int getNumeroVisualizzazioni() {
-        return numeroVisualizzazioni;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

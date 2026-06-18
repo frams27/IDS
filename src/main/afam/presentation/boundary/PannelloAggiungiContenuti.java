@@ -12,10 +12,6 @@ public class PannelloAggiungiContenuti {
     private final Button pulsanteAggiungiFoto;
     private final Button pulsanteAggiungiVideo;
 
-    public static PannelloAggiungiContenuti create(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
-        return new PannelloAggiungiContenuti(ui, tornaAllaGestioneProfilo);
-    }
-
     public PannelloAggiungiContenuti(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
         this.pulsanteAggiungiDocumento = ui.button("Aggiungi documento", "primary");
         this.pulsanteAggiungiAudio = ui.button("Aggiungi audio", "primary");
@@ -30,7 +26,6 @@ public class PannelloAggiungiContenuti {
     }
 
     public Parent mostra() { return root; }
-    public Parent getRoot() { return root; }
     public Button pulsanteAggiungiDocumento() { return pulsanteAggiungiDocumento; }
     public Button pulsanteAggiungiAudio() { return pulsanteAggiungiAudio; }
     public Button pulsanteAggiungiFoto() { return pulsanteAggiungiFoto; }

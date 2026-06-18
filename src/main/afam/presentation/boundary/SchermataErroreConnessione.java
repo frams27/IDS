@@ -8,16 +8,11 @@ public class SchermataErroreConnessione {
     private final Parent root;
     private final Button pulsanteRiconnessione;
 
-    public static SchermataErroreConnessione create(UiFactory ui) {
-        return new SchermataErroreConnessione(ui);
-    }
-
     public SchermataErroreConnessione(UiFactory ui) {
-        this.pulsanteRiconnessione = ui.button("Riprova connessione", "primary");
+        this.pulsanteRiconnessione = ui.button("Riconnessione", "primary");
         this.root = ui.page("Nessuna connessione a Internet", null, pulsanteRiconnessione);
     }
 
     public Parent mostra() { return root; }
-    public Parent getRoot() { return root; }
     public Button pulsanteRiconnessione() { return pulsanteRiconnessione; }
 }

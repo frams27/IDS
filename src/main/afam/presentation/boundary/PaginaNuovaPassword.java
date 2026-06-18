@@ -12,10 +12,6 @@ public class PaginaNuovaPassword {
     private final PasswordField campoConfermaNuovaPassword;
     private final Button pulsanteConferma;
 
-    public static PaginaNuovaPassword create(UiFactory ui, Runnable tornaAllaPaginaDiLogin) {
-        return new PaginaNuovaPassword(ui, tornaAllaPaginaDiLogin);
-    }
-
     public PaginaNuovaPassword(UiFactory ui, Runnable tornaAllaPaginaDiLogin) {
         this.campoNuovaPassword = ui.passwordField("Nuova password");
         this.campoConfermaNuovaPassword = ui.passwordField("Conferma nuova password");
@@ -27,7 +23,6 @@ public class PaginaNuovaPassword {
     }
 
     public Parent mostra() { return root; }
-    public Parent getRoot() { return root; }
     public String nuovaPassword() { return campoNuovaPassword.getText(); }
     public String confermaNuovaPassword() { return campoConfermaNuovaPassword.getText(); }
     public Button pulsanteConferma() { return pulsanteConferma; }

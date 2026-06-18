@@ -13,10 +13,6 @@ public class PaginaModificaPassword {
     private final PasswordField campoConfermaNuovaPassword;
     private final Button pulsanteConferma;
 
-    public static PaginaModificaPassword create(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
-        return new PaginaModificaPassword(ui, tornaAllaGestioneProfilo);
-    }
-
     public PaginaModificaPassword(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
         this.campoVecchiaPassword = ui.passwordField("Vecchia password");
         this.campoNuovaPassword = ui.passwordField("Nuova password");
@@ -30,7 +26,6 @@ public class PaginaModificaPassword {
     }
 
     public Parent mostra() { return root; }
-    public Parent getRoot() { return root; }
     public String vecchiaPassword() { return campoVecchiaPassword.getText(); }
     public String nuovaPassword() { return campoNuovaPassword.getText(); }
     public String confermaNuovaPassword() { return campoConfermaNuovaPassword.getText(); }

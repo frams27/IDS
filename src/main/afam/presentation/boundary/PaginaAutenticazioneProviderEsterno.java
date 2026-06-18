@@ -11,10 +11,6 @@ public class PaginaAutenticazioneProviderEsterno {
     private final Button pulsanteEsitoPositivoProvider;
     private final Button pulsanteEsitoNegativoProvider;
 
-    public static PaginaAutenticazioneProviderEsterno create(UiFactory ui, Runnable tornaAllaPaginaDiLogin) {
-        return new PaginaAutenticazioneProviderEsterno(ui, tornaAllaPaginaDiLogin);
-    }
-
     public PaginaAutenticazioneProviderEsterno(UiFactory ui, Runnable tornaAllaPaginaDiLogin) {
         this.campoEmailProvider = ui.field("Email account provider");
         this.pulsanteEsitoPositivoProvider = ui.button("Simula esito positivo provider", "primary");
@@ -24,7 +20,6 @@ public class PaginaAutenticazioneProviderEsterno {
     }
 
     public Parent mostra() { return root; }
-    public Parent getRoot() { return root; }
     public String emailProvider() { return campoEmailProvider.getText(); }
     public Button pulsanteEsitoPositivoProvider() { return pulsanteEsitoPositivoProvider; }
     public Button pulsanteEsitoNegativoProvider() { return pulsanteEsitoNegativoProvider; }

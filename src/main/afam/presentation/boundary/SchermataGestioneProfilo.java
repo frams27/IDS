@@ -22,10 +22,6 @@ public class SchermataGestioneProfilo {
     private Button pulsanteModificaDatiCurriculari;
     private Button pulsanteModificaPassword;
 
-    public static SchermataGestioneProfilo create(UiFactory ui, Runnable tornaAllaHomePage) {
-        return new SchermataGestioneProfilo(ui, tornaAllaHomePage);
-    }
-
     public SchermataGestioneProfilo(UiFactory ui, Runnable tornaAllaHomePage) {
         this.ui = ui;
         this.tornaAllaHomePage = tornaAllaHomePage;
@@ -48,7 +44,6 @@ public class SchermataGestioneProfilo {
         return root;
     }
 
-    public Parent getRoot() { return root; }
     public ListView<ContenutoMultimediale> listaContenuti() { return listaContenuti; }
     public Button pulsanteAggiungiContenuti() { return pulsanteAggiungiContenuti; }
     public Button pulsanteEliminaContenuti() { return pulsanteEliminaContenuti; }

@@ -14,10 +14,6 @@ public class SchermataHomePage {
     private Button pulsanteGestioneCondivisione;
     private Button pulsanteLogout;
 
-    public static SchermataHomePage create(UiFactory ui) {
-        return new SchermataHomePage(ui);
-    }
-
     public SchermataHomePage(UiFactory ui) {
         this.ui = ui;
     }
@@ -32,7 +28,6 @@ public class SchermataHomePage {
         return root;
     }
 
-    public Parent getRoot() { return root; }
     public Button pulsanteGestioneProfilo() { return pulsanteGestioneProfilo; }
     public Button pulsanteGestioneCondivisione() { return pulsanteGestioneCondivisione; }
     public Button pulsanteLogout() { return pulsanteLogout; }

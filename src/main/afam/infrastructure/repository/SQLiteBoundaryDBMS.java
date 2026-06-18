@@ -297,9 +297,9 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
                     updated_at=CURRENT_TIMESTAMP
                 """)) {
             ps.setInt(1, accountStudenteId);
-            ps.setString(2, truncate(biografia, 500));
-            ps.setString(3, truncate(titoliDiStudio, 500));
-            ps.setString(4, truncate(esperienzeArtisticheEFormative, 500));
+            ps.setString(2, truncate(biografia, 200));
+            ps.setString(3, truncate(titoliDiStudio, 200));
+            ps.setString(4, truncate(esperienzeArtisticheEFormative, 200));
             ps.executeUpdate();
         }
     }

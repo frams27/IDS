@@ -170,14 +170,14 @@ public class AppNavigator {
         switch (vista) {
             case STARTING -> {
                 sessioneCorrente.terminaSessione();
-                SchermataStartingPage page = SchermataStartingPage.create(ui);
+                SchermataStartingPage page = new SchermataStartingPage(ui);
                 page.pulsanteRegistrati().setOnAction(e -> mostra(Vista.REGISTRAZIONE));
                 page.pulsanteAccedi().setOnAction(e -> mostra(Vista.LOGIN));
                 page.pulsanteAccediComeUtenteEsterno().setOnAction(e -> mostra(Vista.ACCESSO_LINK));
                 setScreen(page.mostra(), "Schermata iniziale");
             }
             case REGISTRAZIONE -> {
-                PaginaDiRegistrazione page = PaginaDiRegistrazione.create(ui, () -> mostra(Vista.STARTING));
+                PaginaDiRegistrazione page = new PaginaDiRegistrazione(ui, () -> mostra(Vista.STARTING));
                 page.pulsanteConfermaRegistrazione().setOnAction(e -> {
                     try {
                         registrazioneControl.registra(page.email(), page.password(), page.confermaPassword());
@@ -190,7 +190,7 @@ public class AppNavigator {
                 setScreen(page.mostra(), "Pagina di registrazione");
             }
             case LOGIN -> {
-                PaginaDiLogin page = PaginaDiLogin.create(ui, () -> mostra(Vista.STARTING));
+                PaginaDiLogin page = new PaginaDiLogin(ui, () -> mostra(Vista.STARTING));
                 page.pulsanteAccessoConCredenziali().setOnAction(e -> {
                     try {
                         autenticazioneCredenzialiControl.autentica(page.email(), page.password());
@@ -204,7 +204,7 @@ public class AppNavigator {
                 setScreen(page.mostra(), "Pagina di login");
             }
             case DUE_FA -> {
-                Pagina2FA page = Pagina2FA.create(ui, () -> mostra(Vista.LOGIN));
+                Pagina2FA page = new Pagina2FA(ui, () -> mostra(Vista.LOGIN));
                 page.pulsanteGeneraOTP().setOnAction(e -> runUserAction(() -> {
                     String otp = dueFAControl.generaOTP();
                     String email = sessioneCorrente.accountStudente().map(AccountStudente::email).orElse("");
@@ -226,7 +226,7 @@ public class AppNavigator {
                 setScreen(page.mostra(), "Pagina 2FA");
             }
             case AUTENTICAZIONE_PROVIDER -> {
-                PaginaAutenticazioneProviderEsterno page = PaginaAutenticazioneProviderEsterno.create(ui, () -> mostra(Vista.LOGIN));
+                PaginaAutenticazioneProviderEsterno page = new PaginaAutenticazioneProviderEsterno(ui, () -> mostra(Vista.LOGIN));
                 page.pulsanteEsitoPositivoProvider().setOnAction(e -> runUserAction(() -> {
                     autenticazioneEsternaControl.autenticaConProviderEsterno(page.emailProvider());
                     mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Login effettuato!",
@@ -239,7 +239,7 @@ public class AppNavigator {
                 setScreen(page.mostra(), "Autenticazione con provider esterno");
             }
             case RECUPERA_PASSWORD -> {
-                PaginaRecuperaPassword page = PaginaRecuperaPassword.create(ui, () -> mostra(Vista.LOGIN));
+                PaginaRecuperaPassword page = new PaginaRecuperaPassword(ui, () -> mostra(Vista.LOGIN));
                 page.pulsanteInvia().setOnAction(e -> runUserAction(() -> {
                     AccountStudente account = passwordDimenticataControl.richiediRecuperoPassword(page.email());
                     String token = passwordDimenticataControl.generaLinkRipristino(account);
@@ -251,7 +251,7 @@ public class AppNavigator {
             case NUOVA_PASSWORD -> {
                 AccountStudente account = (AccountStudente) dati[0];
                 String token = (String) dati[1];
-                PaginaNuovaPassword page = PaginaNuovaPassword.create(ui, () -> mostra(Vista.LOGIN));
+                PaginaNuovaPassword page = new PaginaNuovaPassword(ui, () -> mostra(Vista.LOGIN));
                 page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                     passwordDimenticataControl.impostaNuovaPassword(account, token, page.nuovaPassword(), page.confermaNuovaPassword());
                     mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Password modificata con successo!",
@@ -261,7 +261,7 @@ public class AppNavigator {
             }
             case HOME -> {
                 AccountStudente account = requireStudent();
-                SchermataHomePage page = SchermataHomePage.create(ui);
+                SchermataHomePage page = new SchermataHomePage(ui);
                 Parent root = page.mostra(account);
                 page.pulsanteGestioneProfilo().setOnAction(e -> mostra(Vista.GESTIONE_PROFILO));
                 page.pulsanteGestioneCondivisione().setOnAction(e -> mostra(Vista.GESTIONE_CONDIVISIONE));
@@ -271,7 +271,7 @@ public class AppNavigator {
             case ERRORE_CONNESSIONE -> {
                 Runnable previous = (Runnable) dati[0];
                 connessioneControl.memorizzaSchermata(previous);
-                SchermataErroreConnessione page = SchermataErroreConnessione.create(ui);
+                SchermataErroreConnessione page = new SchermataErroreConnessione(ui);
                 page.pulsanteRiconnessione().setOnAction(e -> connessioneControl.ripristinaSchermataPrecedente());
                 setScreen(page.mostra(), "Errore di connessione");
             }
@@ -279,7 +279,7 @@ public class AppNavigator {
                 Alert.AlertType tipo = (Alert.AlertType) dati[0];
                 String messaggio = (String) dati[1];
                 Runnable azioneDopoOk = dati.length > 2 ? (Runnable) dati[2] : null;
-                PannelloDiNotifica page = PannelloDiNotifica.create(ui, tipo, messaggio);
+                PannelloDiNotifica page = new PannelloDiNotifica(ui, tipo, messaggio);
                 page.pulsanteOk().setOnAction(e -> {
                     if (azioneDopoOk != null) {
                         azioneDopoOk.run();
@@ -293,7 +293,7 @@ public class AppNavigator {
                 String messaggio = (String) dati[0];
                 Runnable azioneConferma = (Runnable) dati[1];
                 Runnable azioneAnnulla = dati.length > 2 ? (Runnable) dati[2] : null;
-                PannelloDiConferma page = PannelloDiConferma.create(ui, messaggio);
+                PannelloDiConferma page = new PannelloDiConferma(ui, messaggio);
                 page.pulsanteConferma().setOnAction(e -> {
                     if (azioneConferma != null) {
                         azioneConferma.run();
@@ -313,7 +313,7 @@ public class AppNavigator {
                 try {
                     DatiCurriculari datiCurriculari = modificaDatiCurriculariControl.recuperaDatiCurriculari(account);
                     ObservableList<ContenutoMultimediale> contenuti = FXCollections.observableArrayList(aggiungiContenutiControl.recuperaContenuti(account));
-                    SchermataGestioneProfilo page = SchermataGestioneProfilo.create(ui, () -> mostra(Vista.HOME));
+                    SchermataGestioneProfilo page = new SchermataGestioneProfilo(ui, () -> mostra(Vista.HOME));
                     Parent root = page.mostra(datiCurriculari, contenuti);
                     page.listaContenuti().setOnMouseClicked(event -> {
                         if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
@@ -332,7 +332,7 @@ public class AppNavigator {
                 }
             }
             case AGGIUNGI_CONTENUTI -> {
-                PannelloAggiungiContenuti page = PannelloAggiungiContenuti.create(ui, () -> mostra(Vista.GESTIONE_PROFILO));
+                PannelloAggiungiContenuti page = new PannelloAggiungiContenuti(ui, () -> mostra(Vista.GESTIONE_PROFILO));
                 page.pulsanteAggiungiDocumento().setOnAction(e -> selezionaECaricaFile("Documento"));
                 page.pulsanteAggiungiAudio().setOnAction(e -> selezionaECaricaFile("Audio"));
                 page.pulsanteAggiungiFoto().setOnAction(e -> selezionaECaricaFile("Foto"));
@@ -342,7 +342,7 @@ public class AppNavigator {
             case CONTENUTI_ELIMINABILI -> {
                 try {
                     ObservableList<ContenutoMultimediale> items = FXCollections.observableArrayList(eliminaContenutiControl.recuperaContenutiEliminabili(requireStudent()));
-                    PannelloContenutiEliminabili page = PannelloContenutiEliminabili.create(ui, () -> mostra(Vista.GESTIONE_PROFILO));
+                    PannelloContenutiEliminabili page = new PannelloContenutiEliminabili(ui, () -> mostra(Vista.GESTIONE_PROFILO));
                     Parent root = page.mostra(items);
                     page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                         eliminaContenutiControl.eliminaContenuti(new ArrayList<>(page.listaContenutiEliminabili().getSelectionModel().getSelectedItems()));
@@ -357,7 +357,7 @@ public class AppNavigator {
             case ORGANIZZA_CONTENUTI -> {
                 try {
                     ObservableList<ContenutoMultimediale> items = FXCollections.observableArrayList(organizzaContenutiControl.recuperaContenuti(requireStudent()));
-                    PaginaOrganizzaContenuti page = PaginaOrganizzaContenuti.create(ui, () -> mostra(Vista.GESTIONE_PROFILO));
+                    PaginaOrganizzaContenuti page = new PaginaOrganizzaContenuti(ui, () -> mostra(Vista.GESTIONE_PROFILO));
                     Parent root = page.mostra(items);
                     page.pulsanteSpostaSu().setOnAction(e -> BoundarySupport.spostaSelezionato(page.listaContenuti(), -1));
                     page.pulsanteSpostaGiu().setOnAction(e -> BoundarySupport.spostaSelezionato(page.listaContenuti(), 1));
@@ -374,7 +374,7 @@ public class AppNavigator {
             case MODIFICA_DATI_CURRICULARI -> {
                 try {
                     DatiCurriculari datiCurriculari = modificaDatiCurriculariControl.recuperaDatiCurriculari(requireStudent());
-                    PaginaModificaDatiCurriculari page = PaginaModificaDatiCurriculari.create(ui, () -> mostra(Vista.GESTIONE_PROFILO));
+                    PaginaModificaDatiCurriculari page = new PaginaModificaDatiCurriculari(ui, () -> mostra(Vista.GESTIONE_PROFILO));
                     Parent root = page.mostra(datiCurriculari);
                     page.pulsanteSalva().setOnAction(e -> runUserAction(() -> {
                         modificaDatiCurriculariControl.salvaDatiCurriculari(requireStudent(), page.biografia(), page.titoliDiStudio(), page.esperienzeArtisticheEFormative());
@@ -387,7 +387,7 @@ public class AppNavigator {
                 }
             }
             case MODIFICA_PASSWORD -> {
-                PaginaModificaPassword page = PaginaModificaPassword.create(ui, () -> mostra(Vista.GESTIONE_PROFILO));
+                PaginaModificaPassword page = new PaginaModificaPassword(ui, () -> mostra(Vista.GESTIONE_PROFILO));
                 page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                     modificaPasswordControl.modificaPassword(page.vecchiaPassword(), page.nuovaPassword(), page.confermaNuovaPassword());
                     mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Modifica avvenuta con successo.",
@@ -397,14 +397,14 @@ public class AppNavigator {
             }
             case GESTIONE_CONDIVISIONE -> {
                 requireStudent();
-                SchermataGestioneCondivisione page = SchermataGestioneCondivisione.create(ui, () -> mostra(Vista.HOME));
+                SchermataGestioneCondivisione page = new SchermataGestioneCondivisione(ui, () -> mostra(Vista.HOME));
                 page.pulsanteGeneraLink().setOnAction(e -> mostra(Vista.CONTENUTI_VISUALIZZABILI));
                 page.pulsanteFeedbackContenuti().setOnAction(e -> mostra(Vista.FEEDBACK_CONTENUTI));
                 page.pulsanteDisattivaLink().setOnAction(e -> mostra(Vista.LISTA_LINK_ATTIVI));
                 setScreen(page.mostra(), "Gestione condivisione");
             }
             case CONTENUTI_VISUALIZZABILI -> {
-                PaginaContenutiVisualizzabili page = PaginaContenutiVisualizzabili.create(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                PaginaContenutiVisualizzabili page = new PaginaContenutiVisualizzabili(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                 page.pulsanteSelezionaContenuti().setOnAction(e -> mostra(Vista.PANNELLO_CONTENUTI_VISUALIZZABILI));
                 setScreen(page.mostra(), "Contenuti visualizzabili");
             }
@@ -416,7 +416,7 @@ public class AppNavigator {
                                 (Runnable) () -> mostra(Vista.CONTENUTI_VISUALIZZABILI));
                         return;
                     }
-                    PannelloContenutiVisualizzabili page = PannelloContenutiVisualizzabili.create(ui, () -> mostra(Vista.CONTENUTI_VISUALIZZABILI));
+                    PannelloContenutiVisualizzabili page = new PannelloContenutiVisualizzabili(ui, () -> mostra(Vista.CONTENUTI_VISUALIZZABILI));
                     Parent root = page.mostra(contents);
                     page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                         List<ContenutoMultimediale> selected = page.contenutiSelezionati();
@@ -431,7 +431,7 @@ public class AppNavigator {
             }
             case PARAMETRI_FACOLTATIVI -> {
                 List<ContenutoMultimediale> contenutiSelezionati = (List<ContenutoMultimediale>) dati[0];
-                PannelloParametriFacoltativi page = PannelloParametriFacoltativi.create(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                PannelloParametriFacoltativi page = new PannelloParametriFacoltativi(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                 page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                     LinkDiCondivisione link = creazioneLinkControl.generaLink(requireStudent(), contenutiSelezionati, page.descrizione(), page.dataDiScadenza());
                     mostra(Vista.LINK_GENERATO, link);
@@ -440,7 +440,7 @@ public class AppNavigator {
             }
             case LINK_GENERATO -> {
                 LinkDiCondivisione link = (LinkDiCondivisione) dati[0];
-                PannelloLinkGenerato page = PannelloLinkGenerato.create(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                PannelloLinkGenerato page = new PannelloLinkGenerato(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                 Parent root = page.mostra(link);
                 page.pulsanteCopiaLink().setOnAction(e -> {
                     ClipboardContent content = new ClipboardContent();
@@ -459,7 +459,7 @@ public class AppNavigator {
                                 (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                         return;
                     }
-                    SchermataFeedbackContenuti page = SchermataFeedbackContenuti.create(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                    SchermataFeedbackContenuti page = new SchermataFeedbackContenuti(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                     Parent root = page.mostra(links);
                     page.pulsanteVisualizzaFeedback().setOnAction(e -> runUserAction(() -> {
                         LinkDiCondivisione selected = page.listaLink().getSelectionModel().getSelectedItem();
@@ -480,7 +480,7 @@ public class AppNavigator {
                                 (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                         return;
                     }
-                    SchermataListaLinkAttivi page = SchermataListaLinkAttivi.create(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                    SchermataListaLinkAttivi page = new SchermataListaLinkAttivi(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                     Parent root = page.mostra(links);
                     page.pulsanteDisattiva().setOnAction(e -> runUserAction(() -> {
                         disattivaLinkControl.disattivaLink(page.listaLinkAttivi().getSelectionModel().getSelectedItem());
@@ -493,7 +493,7 @@ public class AppNavigator {
                 }
             }
             case ACCESSO_LINK -> {
-                PannelloAccessoLink page = PannelloAccessoLink.create(ui, () -> mostra(Vista.STARTING));
+                PannelloAccessoLink page = new PannelloAccessoLink(ui, () -> mostra(Vista.STARTING));
                 page.pulsanteConferma().setOnAction(e -> {
                     try {
                         LinkDiCondivisione link = visualizzazioneContenutiControl.validaLink(page.linkInserito());
@@ -509,7 +509,7 @@ public class AppNavigator {
                 LinkDiCondivisione link = (LinkDiCondivisione) dati[0];
                 try {
                     PortfolioCondiviso portfolio = visualizzazioneContenutiControl.recuperaPortfolioCondiviso(link);
-                    SchermataContenutiCondivisi page = SchermataContenutiCondivisi.create(ui, () -> mostra(Vista.STARTING));
+                    SchermataContenutiCondivisi page = new SchermataContenutiCondivisi(ui, () -> mostra(Vista.STARTING));
                     Parent root = page.mostra(portfolio);
                     page.listaContenutiMultimediali().setOnMouseClicked(event -> {
                         if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
@@ -530,7 +530,8 @@ public class AppNavigator {
         mostra(Vista.PANNELLO_DI_CONFERMA, "Desideri effettuare il logout?", (Runnable) () -> {
             runUserAction(() -> {
                 logoutControl.eseguiLogout();
-                mostra(Vista.STARTING);
+                mostra(Vista.PANNELLO_DI_NOTIFICA, Alert.AlertType.INFORMATION, "Logout effettuato con successo.",
+                        (Runnable) () -> mostra(Vista.STARTING));
             });
         }, null);
     }

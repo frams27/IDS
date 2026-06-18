@@ -12,10 +12,6 @@ public class PannelloAccessoLink {
     private final Button pulsanteConferma;
     private final Button pulsanteAnnulla;
 
-    public static PannelloAccessoLink create(UiFactory ui, Runnable tornaAllaStartingPage) {
-        return new PannelloAccessoLink(ui, tornaAllaStartingPage);
-    }
-
     public PannelloAccessoLink(UiFactory ui, Runnable tornaAllaStartingPage) {
         this.campoLink = ui.field("Inserisci il link di condivisione");
         this.pulsanteConferma = ui.button("Conferma", "primary");
@@ -25,7 +21,6 @@ public class PannelloAccessoLink {
     }
 
     public Parent mostra() { return root; }
-    public Parent getRoot() { return root; }
     public String linkInserito() { return campoLink.getText(); }
     public Button pulsanteConferma() { return pulsanteConferma; }
     public Button pulsanteAnnulla() { return pulsanteAnnulla; }

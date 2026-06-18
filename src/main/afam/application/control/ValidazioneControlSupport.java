@@ -21,7 +21,7 @@ final class ValidazioneControlSupport {
     static void richiediEmailValida(String email) throws ApplicationException {
         richiediTesto(email, "Inserisci l'email.");
         if (!SecurityUtil.isValidEmail(email)) {
-            throw new ApplicationException("Inserisci un indirizzo email valido.");
+            throw new ApplicationException("ATTENZIONE: l\u2019email inserita non \u00e8 valida.");
         }
     }
 
@@ -32,8 +32,8 @@ final class ValidazioneControlSupport {
     }
 
     static void verificaLimiteTesto(String value, String fieldName) throws ApplicationException {
-        if (value != null && value.length() > 500) {
-            throw new ApplicationException(fieldName + " supera il limite di 500 caratteri.");
+        if (value != null && value.length() > 200) {
+            throw new ApplicationException(fieldName + " supera il limite di 200 caratteri.");
         }
     }
 }

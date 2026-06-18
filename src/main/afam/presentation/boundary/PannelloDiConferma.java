@@ -11,10 +11,6 @@ public class PannelloDiConferma {
     private final Button pulsanteConferma;
     private final Button pulsanteAnnulla;
 
-    public static PannelloDiConferma create(UiFactory ui, String messaggio) {
-        return new PannelloDiConferma(ui, messaggio);
-    }
-
     public PannelloDiConferma(UiFactory ui, String messaggio) {
         Label testoMessaggio = new Label(messaggio);
         testoMessaggio.setWrapText(true);
@@ -28,9 +24,6 @@ public class PannelloDiConferma {
         return root;
     }
 
-    public Parent getRoot() {
-        return root;
-    }
 
     public Button pulsanteConferma() {
         return pulsanteConferma;

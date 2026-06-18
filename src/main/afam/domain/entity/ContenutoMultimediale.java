@@ -63,42 +63,6 @@ public final class ContenutoMultimediale {
         return posizione;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public int getAccountStudenteId() {
-        return accountStudenteId;
-    }
-
-    public String getTitolo() {
-        return titolo;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public String getNomeOriginale() {
-        return nomeOriginale;
-    }
-
-    public String getFormato() {
-        return formato;
-    }
-
-    public long getDimensione() {
-        return dimensione;
-    }
-
-    public Path getPercorsoFile() {
-        return percorsoFile;
-    }
-
-    public int getPosizione() {
-        return posizione;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

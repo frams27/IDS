@@ -13,10 +13,6 @@ public class PannelloLinkGenerato {
     private TextField campoLinkGenerato;
     private Button pulsanteCopiaLink;
 
-    public static PannelloLinkGenerato create(UiFactory ui, Runnable tornaAllaGestioneCondivisione) {
-        return new PannelloLinkGenerato(ui, tornaAllaGestioneCondivisione);
-    }
-
     public PannelloLinkGenerato(UiFactory ui, Runnable tornaAllaGestioneCondivisione) {
         this.ui = ui;
         this.tornaAllaGestioneCondivisione = tornaAllaGestioneCondivisione;
@@ -31,7 +27,6 @@ public class PannelloLinkGenerato {
         return root;
     }
 
-    public Parent getRoot() { return root; }
     public String linkGenerato() { return campoLinkGenerato.getText(); }
     public Button pulsanteCopiaLink() { return pulsanteCopiaLink; }
 }

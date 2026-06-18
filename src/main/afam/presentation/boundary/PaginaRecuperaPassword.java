@@ -11,10 +11,6 @@ public class PaginaRecuperaPassword {
     private final TextField campoEmail;
     private final Button pulsanteInvia;
 
-    public static PaginaRecuperaPassword create(UiFactory ui, Runnable tornaAllaPaginaDiLogin) {
-        return new PaginaRecuperaPassword(ui, tornaAllaPaginaDiLogin);
-    }
-
     public PaginaRecuperaPassword(UiFactory ui, Runnable tornaAllaPaginaDiLogin) {
         this.campoEmail = ui.field("Email");
         this.pulsanteInvia = ui.button("Invia", "primary");
@@ -23,7 +19,6 @@ public class PaginaRecuperaPassword {
     }
 
     public Parent mostra() { return root; }
-    public Parent getRoot() { return root; }
     public String email() { return campoEmail.getText(); }
     public Button pulsanteInvia() { return pulsanteInvia; }
 }

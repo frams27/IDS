@@ -17,10 +17,6 @@ public class PaginaOrganizzaContenuti {
     private Button pulsanteSpostaGiu;
     private Button pulsanteConferma;
 
-    public static PaginaOrganizzaContenuti create(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
-        return new PaginaOrganizzaContenuti(ui, tornaAllaGestioneProfilo);
-    }
-
     public PaginaOrganizzaContenuti(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
         this.ui = ui;
         this.tornaAllaGestioneProfilo = tornaAllaGestioneProfilo;
@@ -37,7 +33,6 @@ public class PaginaOrganizzaContenuti {
         return root;
     }
 
-    public Parent getRoot() { return root; }
     public ListView<ContenutoMultimediale> listaContenuti() { return listaContenuti; }
     public Button pulsanteSpostaSu() { return pulsanteSpostaSu; }
     public Button pulsanteSpostaGiu() { return pulsanteSpostaGiu; }

@@ -16,10 +16,6 @@ public class SchermataFeedbackContenuti {
     private TextArea areaDettagli;
     private Button pulsanteVisualizzaFeedback;
 
-    public static SchermataFeedbackContenuti create(UiFactory ui, Runnable tornaAllaGestioneCondivisione) {
-        return new SchermataFeedbackContenuti(ui, tornaAllaGestioneCondivisione);
-    }
-
     public SchermataFeedbackContenuti(UiFactory ui, Runnable tornaAllaGestioneCondivisione) {
         this.ui = ui;
         this.tornaAllaGestioneCondivisione = tornaAllaGestioneCondivisione;
@@ -35,7 +31,6 @@ public class SchermataFeedbackContenuti {
         return root;
     }
 
-    public Parent getRoot() { return root; }
     public ListView<LinkDiCondivisione> listaLink() { return listaLink; }
     public TextArea areaDettagli() { return areaDettagli; }
     public Button pulsanteVisualizzaFeedback() { return pulsanteVisualizzaFeedback; }

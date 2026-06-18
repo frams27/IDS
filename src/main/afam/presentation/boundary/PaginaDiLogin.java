@@ -16,14 +16,10 @@ public class PaginaDiLogin {
     private final Button pulsanteLoginEsterno;
     private final Button pulsantePasswordDimenticata;
 
-    public static PaginaDiLogin create(UiFactory ui, Runnable tornaAllaStartingPage) {
-        return new PaginaDiLogin(ui, tornaAllaStartingPage);
-    }
-
     public PaginaDiLogin(UiFactory ui, Runnable tornaAllaStartingPage) {
         this.campoEmail = ui.field("Email");
         this.campoPassword = ui.passwordField("Password");
-        this.pulsanteAccessoConCredenziali = ui.button("Accedi con credenziali", "primary");
+        this.pulsanteAccessoConCredenziali = ui.button("Accesso con credenziali", "primary");
         this.pulsanteLoginEsterno = ui.button("Login esterno", "secondary");
         this.pulsantePasswordDimenticata = ui.button("Password dimenticata", "secondary");
         this.root = ui.page("Pagina di login", tornaAllaStartingPage,
@@ -33,7 +29,6 @@ public class PaginaDiLogin {
     }
 
     public Parent mostra() { return root; }
-    public Parent getRoot() { return root; }
     public String email() { return campoEmail.getText(); }
     public String password() { return campoPassword.getText(); }
     public Button pulsanteAccessoConCredenziali() { return pulsanteAccessoConCredenziali; }

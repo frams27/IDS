@@ -12,10 +12,6 @@ public class SchermataStartingPage {
     private final Button pulsanteAccedi;
     private final Button pulsanteAccediComeUtenteEsterno;
 
-    public static SchermataStartingPage create(UiFactory ui) {
-        return new SchermataStartingPage(ui);
-    }
-
     public SchermataStartingPage(UiFactory ui) {
         this.pulsanteRegistrati = ui.button("Registrati", "primary");
         this.pulsanteAccedi = ui.button("Accedi", "primary");
@@ -27,7 +23,6 @@ public class SchermataStartingPage {
     }
 
     public Parent mostra() { return root; }
-    public Parent getRoot() { return root; }
     public Button pulsanteRegistrati() { return pulsanteRegistrati; }
     public Button pulsanteAccedi() { return pulsanteAccedi; }
     public Button pulsanteAccediComeUtenteEsterno() { return pulsanteAccediComeUtenteEsterno; }

@@ -17,10 +17,6 @@ public class SchermataContenutiCondivisi {
     private ListView<ContenutoMultimediale> listaContenutiMultimediali;
     private Button pulsanteTornaAllaSchermataIniziale;
 
-    public static SchermataContenutiCondivisi create(UiFactory ui, Runnable tornaAllaStartingPage) {
-        return new SchermataContenutiCondivisi(ui, tornaAllaStartingPage);
-    }
-
     public SchermataContenutiCondivisi(UiFactory ui, Runnable tornaAllaStartingPage) {
         this.ui = ui;
         this.tornaAllaStartingPage = tornaAllaStartingPage;
@@ -37,7 +33,6 @@ public class SchermataContenutiCondivisi {
         return root;
     }
 
-    public Parent getRoot() { return root; }
     public ListView<ContenutoMultimediale> listaContenutiMultimediali() { return listaContenutiMultimediali; }
     public Button pulsanteTornaAllaSchermataIniziale() { return pulsanteTornaAllaSchermataIniziale; }
 }

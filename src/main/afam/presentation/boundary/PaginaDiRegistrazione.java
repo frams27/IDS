@@ -14,10 +14,6 @@ public class PaginaDiRegistrazione {
     private final PasswordField campoConfermaPassword;
     private final Button pulsanteConfermaRegistrazione;
 
-    public static PaginaDiRegistrazione create(UiFactory ui, Runnable tornaAllaStartingPage) {
-        return new PaginaDiRegistrazione(ui, tornaAllaStartingPage);
-    }
-
     public PaginaDiRegistrazione(UiFactory ui, Runnable tornaAllaStartingPage) {
         this.campoEmail = ui.field("Email");
         this.campoPassword = ui.passwordField("Password");
@@ -31,7 +27,6 @@ public class PaginaDiRegistrazione {
     }
 
     public Parent mostra() { return root; }
-    public Parent getRoot() { return root; }
     public String email() { return campoEmail.getText(); }
     public String password() { return campoPassword.getText(); }
     public String confermaPassword() { return campoConfermaPassword.getText(); }

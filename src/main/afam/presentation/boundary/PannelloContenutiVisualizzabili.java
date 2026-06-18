@@ -21,10 +21,6 @@ public class PannelloContenutiVisualizzabili {
     private final Map<ContenutoMultimediale, CheckBox> checkMap = new LinkedHashMap<>();
     private Button pulsanteConferma;
 
-    public static PannelloContenutiVisualizzabili create(UiFactory ui, Runnable tornaAllaPaginaContenutiVisualizzabili) {
-        return new PannelloContenutiVisualizzabili(ui, tornaAllaPaginaContenutiVisualizzabili);
-    }
-
     public PannelloContenutiVisualizzabili(UiFactory ui, Runnable tornaAllaPaginaContenutiVisualizzabili) {
         this.ui = ui;
         this.tornaAllaPaginaContenutiVisualizzabili = tornaAllaPaginaContenutiVisualizzabili;
@@ -44,7 +40,6 @@ public class PannelloContenutiVisualizzabili {
         return root;
     }
 
-    public Parent getRoot() { return root; }
     public List<ContenutoMultimediale> contenutiSelezionati() {
         return checkMap.entrySet().stream()
                 .filter(en -> en.getValue().isSelected())

@@ -14,10 +14,6 @@ public class SchermataListaLinkAttivi {
     private ListView<LinkDiCondivisione> listaLinkAttivi;
     private Button pulsanteDisattiva;
 
-    public static SchermataListaLinkAttivi create(UiFactory ui, Runnable tornaAllaGestioneCondivisione) {
-        return new SchermataListaLinkAttivi(ui, tornaAllaGestioneCondivisione);
-    }
-
     public SchermataListaLinkAttivi(UiFactory ui, Runnable tornaAllaGestioneCondivisione) {
         this.ui = ui;
         this.tornaAllaGestioneCondivisione = tornaAllaGestioneCondivisione;
@@ -30,7 +26,6 @@ public class SchermataListaLinkAttivi {
         return root;
     }
 
-    public Parent getRoot() { return root; }
     public ListView<LinkDiCondivisione> listaLinkAttivi() { return listaLinkAttivi; }
     public Button pulsanteDisattiva() { return pulsanteDisattiva; }
 }

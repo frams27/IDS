@@ -16,19 +16,15 @@ public class PaginaModificaDatiCurriculari {
     private TextArea campoEsperienzeArtisticheEFormative;
     private Button pulsanteSalva;
 
-    public static PaginaModificaDatiCurriculari create(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
-        return new PaginaModificaDatiCurriculari(ui, tornaAllaGestioneProfilo);
-    }
-
     public PaginaModificaDatiCurriculari(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
         this.ui = ui;
         this.tornaAllaGestioneProfilo = tornaAllaGestioneProfilo;
     }
 
     public Parent mostra(DatiCurriculari dati) {
-        this.campoBiografia = ui.limitedTextArea("Biografia", dati.biografia(), 500);
-        this.campoTitoliDiStudio = ui.limitedTextArea("Titoli di studio", dati.titoliDiStudio(), 500);
-        this.campoEsperienzeArtisticheEFormative = ui.limitedTextArea("Esperienze artistiche e formative", dati.esperienzeArtisticheEFormative(), 500);
+        this.campoBiografia = ui.limitedTextArea("Biografia", dati.biografia(), 200);
+        this.campoTitoliDiStudio = ui.limitedTextArea("Titoli di studio", dati.titoliDiStudio(), 200);
+        this.campoEsperienzeArtisticheEFormative = ui.limitedTextArea("Esperienze artistiche e formative", dati.esperienzeArtisticheEFormative(), 200);
         this.pulsanteSalva = ui.button("Salva", "primary");
         this.root = ui.page("Modifica dati curriculari", tornaAllaGestioneProfilo,
                 new Label("Biografia"), campoBiografia,
@@ -38,7 +34,6 @@ public class PaginaModificaDatiCurriculari {
         return root;
     }
 
-    public Parent getRoot() { return root; }
     public String biografia() { return campoBiografia.getText(); }
     public String titoliDiStudio() { return campoTitoliDiStudio.getText(); }
     public String esperienzeArtisticheEFormative() { return campoEsperienzeArtisticheEFormative.getText(); }

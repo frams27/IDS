@@ -10,10 +10,6 @@ public class PannelloDiNotifica {
     private final Parent root;
     private final Button pulsanteOk;
 
-    public static PannelloDiNotifica create(UiFactory ui, Alert.AlertType tipo, String messaggio) {
-        return new PannelloDiNotifica(ui, tipo, messaggio);
-    }
-
     public PannelloDiNotifica(UiFactory ui, Alert.AlertType tipo, String messaggio) {
         Label testoMessaggio = new Label(messaggio);
         testoMessaggio.setWrapText(true);
@@ -26,9 +22,6 @@ public class PannelloDiNotifica {
         return root;
     }
 
-    public Parent getRoot() {
-        return root;
-    }
 
     public Button pulsanteOk() {
         return pulsanteOk;

@@ -15,10 +15,6 @@ public class PannelloContenutiEliminabili {
     private ListView<ContenutoMultimediale> listaContenutiEliminabili;
     private Button pulsanteConferma;
 
-    public static PannelloContenutiEliminabili create(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
-        return new PannelloContenutiEliminabili(ui, tornaAllaGestioneProfilo);
-    }
-
     public PannelloContenutiEliminabili(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
         this.ui = ui;
         this.tornaAllaGestioneProfilo = tornaAllaGestioneProfilo;
@@ -32,7 +28,6 @@ public class PannelloContenutiEliminabili {
         return root;
     }
 
-    public Parent getRoot() { return root; }
     public ListView<ContenutoMultimediale> listaContenutiEliminabili() { return listaContenutiEliminabili; }
     public Button pulsanteConferma() { return pulsanteConferma; }
 }

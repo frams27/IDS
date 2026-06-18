@@ -29,18 +29,6 @@ public final class DatiCurriculari {
         return esperienzeArtisticheEFormative;
     }
 
-    public String getBiografia() {
-        return biografia;
-    }
-
-    public String getTitoliDiStudio() {
-        return titoliDiStudio;
-    }
-
-    public String getEsperienzeArtisticheEFormative() {
-        return esperienzeArtisticheEFormative;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

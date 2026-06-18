@@ -11,10 +11,6 @@ public class SchermataGestioneCondivisione {
     private final Button pulsanteFeedbackContenuti;
     private final Button pulsanteDisattivaLink;
 
-    public static SchermataGestioneCondivisione create(UiFactory ui, Runnable tornaAllaHomePage) {
-        return new SchermataGestioneCondivisione(ui, tornaAllaHomePage);
-    }
-
     public SchermataGestioneCondivisione(UiFactory ui, Runnable tornaAllaHomePage) {
         this.pulsanteGeneraLink = ui.button("Genera link", "primary");
         this.pulsanteFeedbackContenuti = ui.button("Feedback contenuti", "secondary");
@@ -24,7 +20,6 @@ public class SchermataGestioneCondivisione {
     }
 
     public Parent mostra() { return root; }
-    public Parent getRoot() { return root; }
     public Button pulsanteGeneraLink() { return pulsanteGeneraLink; }
     public Button pulsanteFeedbackContenuti() { return pulsanteFeedbackContenuti; }
     public Button pulsanteDisattivaLink() { return pulsanteDisattivaLink; }
