@@ -20,7 +20,7 @@ public class PannelloLinkGenerato {
 
     public Parent mostra(LinkDiCondivisione link) {
         Label titolo = new Label("Link generato");
-        titolo.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        titolo.getStyleClass().add("popup-title");
         this.campoLinkGenerato = ui.field("Link generato");
         campoLinkGenerato.setText(link.url());
         campoLinkGenerato.setEditable(false);

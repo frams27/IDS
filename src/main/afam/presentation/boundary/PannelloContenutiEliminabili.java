@@ -24,7 +24,7 @@ public class PannelloContenutiEliminabili {
 
     public Parent mostra(ObservableList<ContenutoMultimediale> contenuti) {
         Label titolo = new Label("Contenuti eliminabili");
-        titolo.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        titolo.getStyleClass().add("popup-title");
         this.listaContenutiEliminabili = ui.listaContenuti(contenuti);
         listaContenutiEliminabili.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         listaContenutiEliminabili.setPrefHeight(200);

@@ -13,7 +13,7 @@ public class PannelloDiNotifica {
     public PannelloDiNotifica(UiFactory ui, String messaggio) {
         //qui inseriramo il titolo del pannello di notifica
         Label titoloNotifica = new Label("Pannello di Notifica");
-        titoloNotifica.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        titoloNotifica.getStyleClass().add("popup-title");
         //qui inseriamo il messaggio di notifica
         Label testoMessaggio = new Label(messaggio);
         testoMessaggio.setWrapText(true);

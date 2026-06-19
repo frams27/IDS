@@ -28,7 +28,7 @@ public class PannelloContenutiVisualizzabili {
 
     public Parent mostra(ObservableList<ContenutoMultimediale> contenuti) {
         Label titolo = new Label("Seleziona contenuti");
-        titolo.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        titolo.getStyleClass().add("popup-title");
         Label descrizione = new Label("Seleziona uno o più contenuti.");
         descrizione.setWrapText(true);
         descrizione.setMaxWidth(Double.MAX_VALUE);

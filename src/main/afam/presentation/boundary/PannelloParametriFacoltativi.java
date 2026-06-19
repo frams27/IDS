@@ -18,7 +18,7 @@ public class PannelloParametriFacoltativi {
 
     public PannelloParametriFacoltativi(UiFactory ui) {
         Label titolo = new Label("Parametri facoltativi");
-        titolo.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        titolo.getStyleClass().add("popup-title");
         this.campoDescrizione = ui.limitedTextArea("Descrizione", "", 200);
         this.campoDataDiScadenza = new DatePicker();
         this.pulsanteConferma = ui.button("Conferma", "primary");

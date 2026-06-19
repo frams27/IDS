@@ -17,7 +17,7 @@ public class PannelloAggiungiContenuti {
 
     public PannelloAggiungiContenuti(UiFactory ui) {
         Label titolo = new Label("Aggiungi contenuti");
-        titolo.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        titolo.getStyleClass().add("popup-title");
         Label descrizione = new Label("Seleziona il tipo di contenuto da caricare.");
         descrizione.setWrapText(true);
         descrizione.setMaxWidth(Double.MAX_VALUE);

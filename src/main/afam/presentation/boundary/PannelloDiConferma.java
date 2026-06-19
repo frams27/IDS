@@ -14,7 +14,7 @@ public class PannelloDiConferma {
 
     public PannelloDiConferma(UiFactory ui, String msg) {
         Label titoloConferma = new Label("Pannello di Conferma");
-        titoloConferma.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;"); //da spostare nel css
+        titoloConferma.getStyleClass().add("popup-title");
         Label testoMessaggio = new Label(msg);
         testoMessaggio.setWrapText(true);
         testoMessaggio.setMaxWidth(Double.MAX_VALUE);

@@ -16,7 +16,7 @@ public class PannelloAccessoLink {
 
     public PannelloAccessoLink(UiFactory ui) {
         Label titolo = new Label("Accesso tramite link");
-        titolo.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        titolo.getStyleClass().add("popup-title");
         this.campoLink = ui.field("Inserisci il link di condivisione");
         this.pulsanteConferma = ui.button("Conferma", "primary");
         this.pulsanteAnnulla = ui.button("Annulla", "secondary");
