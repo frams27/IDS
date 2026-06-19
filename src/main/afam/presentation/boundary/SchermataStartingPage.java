@@ -15,7 +15,7 @@ public class SchermataStartingPage {
     public SchermataStartingPage(UiFactory ui) {
         this.pulsanteRegistrati = ui.button("Registrati", "primary");
         this.pulsanteAccedi = ui.button("Accedi", "primary");
-        this.pulsanteEntraComeUtenteEsterno = ui.button("Entra come utente esterno", "secondary");
+        this.pulsanteEntraComeUtenteEsterno = ui.button("Entra Come Utente Esterno", "secondary");
         VBox buttons = new VBox(12, pulsanteRegistrati, pulsanteAccedi, pulsanteEntraComeUtenteEsterno);
         buttons.setAlignment(Pos.CENTER);
         buttons.setMaxWidth(360);

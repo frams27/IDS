@@ -83,7 +83,6 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
                         url TEXT NOT NULL UNIQUE,
                         description TEXT,
                         expires_on TEXT,
-                        active INTEGER NOT NULL DEFAULT 1,
                         view_count INTEGER NOT NULL DEFAULT 0,
                         created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY(student_id) REFERENCES accounts(id) ON DELETE CASCADE
@@ -381,8 +380,8 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
         try (Connection c = connect()) {
             c.setAutoCommit(false);
             try (PreparedStatement ps = c.prepareStatement("""
-                    INSERT INTO share_links(student_id,url,description,expires_on,active,view_count)
-                    VALUES(?,?,?,?,1,0)
+                    INSERT INTO share_links(student_id,url,description,expires_on,view_count)
+                    VALUES(?,?,?,?,0)
                     """, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, accountStudenteId);
                 ps.setString(2, url);
@@ -403,7 +402,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
                     ps2.executeBatch();
                 }
                 c.commit();
-                return new LinkDiCondivisione(linkId, accountStudenteId, url, descrizione, dataDiScadenza, true, 0);
+                return new LinkDiCondivisione(linkId, accountStudenteId, url, descrizione, dataDiScadenza, 0);
             } catch (Exception ex) {
                 c.rollback();
                 throw ex;
@@ -414,9 +413,9 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
     }
 
     @Override
-    public List<LinkDiCondivisione> recuperaLinkDiCondivisione(int accountStudenteId, boolean soloAttivi) throws SQLException {
-        String sql = "SELECT * FROM share_links WHERE student_id=?" + (soloAttivi ? " AND active=1" : "") + " ORDER BY created_at DESC";
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(sql)) {
+    public List<LinkDiCondivisione> recuperaLinkDiCondivisione(int accountStudenteId) throws SQLException {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(
+                "SELECT * FROM share_links WHERE student_id=? ORDER BY created_at DESC")) {
             ps.setInt(1, accountStudenteId);
             try (ResultSet rs = ps.executeQuery()) {
                 List<LinkDiCondivisione> out = new ArrayList<>();
@@ -433,7 +432,6 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) return Optional.empty();
                 LinkDiCondivisione link = linkFrom(rs);
-                if (!link.attivo()) return Optional.empty();
                 if (link.dataDiScadenza() != null && link.dataDiScadenza().isBefore(LocalDate.now())) return Optional.empty();
                 return Optional.of(link);
             }
@@ -444,7 +442,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
         String date = rs.getString("expires_on");
         LocalDate expires = (date == null || date.isBlank()) ? null : LocalDate.parse(date);
         return new LinkDiCondivisione(rs.getInt("id"), rs.getInt("student_id"), rs.getString("url"),
-                rs.getString("description"), expires, rs.getInt("active") == 1, rs.getInt("view_count"));
+                rs.getString("description"), expires, rs.getInt("view_count"));
     }
 
     @Override
@@ -473,23 +471,8 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
     }
 
     @Override
-    public List<String> recuperaRigheVisualizzazione(int linkId) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("""
-                SELECT viewer_label, viewed_at FROM views
-                WHERE link_id=? ORDER BY viewed_at DESC
-                """)) {
-            ps.setInt(1, linkId);
-            try (ResultSet rs = ps.executeQuery()) {
-                List<String> rows = new ArrayList<>();
-                while (rs.next()) rows.add(rs.getString("viewer_label") + " | " + rs.getString("viewed_at"));
-                return rows;
-            }
-        }
-    }
-
-    @Override
     public void disattivaLink(int linkId) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("UPDATE share_links SET active=0 WHERE id=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("DELETE FROM share_links WHERE id=?")) {
             ps.setInt(1, linkId);
             ps.executeUpdate();
         }

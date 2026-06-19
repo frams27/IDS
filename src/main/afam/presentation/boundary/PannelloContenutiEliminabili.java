@@ -5,31 +5,35 @@ import afam.presentation.ui.UiFactory;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 public class PannelloContenutiEliminabili {
     private final UiFactory ui;
-    private final Runnable tornaAllaGestioneProfilo;
     private Parent root;
     private ListView<ContenutoMultimediale> listaContenutiEliminabili;
     private Button pulsanteConferma;
     private Button pulsanteAnnulla;
 
-    public PannelloContenutiEliminabili(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
+    public PannelloContenutiEliminabili(UiFactory ui) {
         this.ui = ui;
-        this.tornaAllaGestioneProfilo = tornaAllaGestioneProfilo;
     }
 
     public Parent mostra(ObservableList<ContenutoMultimediale> contenuti) {
-        this.listaContenutiEliminabili = BoundarySupport.listaContenuti(contenuti);
+        Label titolo = new Label("Contenuti eliminabili");
+        titolo.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        this.listaContenutiEliminabili = ui.listaContenuti(contenuti);
         listaContenutiEliminabili.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        listaContenutiEliminabili.setPrefHeight(200);
         this.pulsanteConferma = ui.button("Conferma", "danger");
         this.pulsanteAnnulla = ui.button("Annulla", "secondary");
-        this.root = ui.page("Contenuti eliminabili", tornaAllaGestioneProfilo,
-                listaContenutiEliminabili,
+        VBox panel = new VBox(14, titolo, listaContenutiEliminabili,
                 new HBox(10, pulsanteConferma, pulsanteAnnulla));
+        panel.getStyleClass().add("popup-card");
+        this.root = panel;
         return root;
     }
 

@@ -23,7 +23,7 @@ public class SchermataContenutiCondivisi {
     }
 
     public Parent mostra(PortfolioCondiviso portfolio) {
-        this.listaContenutiMultimediali = BoundarySupport.listaContenuti(FXCollections.observableArrayList(portfolio.contenutiMultimediali()));
+        this.listaContenutiMultimediali = ui.listaContenuti(FXCollections.observableArrayList(portfolio.contenutiMultimediali()));
         listaContenutiMultimediali.setPrefHeight(330);
         this.pulsanteTornaAllaSchermataIniziale = ui.button("Torna alla schermata iniziale", "secondary");
         this.root = ui.page("Contenuti condivisi", tornaAllaStartingPage,

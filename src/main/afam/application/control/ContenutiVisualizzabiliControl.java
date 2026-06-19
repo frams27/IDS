@@ -20,7 +20,7 @@ public class ContenutiVisualizzabiliControl {
 
     public void verificaSelezione(List<ContenutoMultimediale> selezionati) throws ApplicationException {
         if (selezionati == null || selezionati.isEmpty()) {
-            throw new ApplicationException("Seleziona almeno un contenuto visualizzabile.");
+            throw new ApplicationException("Selezionare almeno un contenuto per procedere");
         }
     }
 }

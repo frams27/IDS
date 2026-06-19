@@ -20,7 +20,7 @@ public class VisualizzazioneContenutiControl {
         }
         Optional<LinkDiCondivisione> link = boundaryDBMS.recuperaLinkValido(url.trim());
         if (link.isEmpty()) {
-            throw new ApplicationException("Link inesistente.");
+            throw new ApplicationException("Link Inesistente.");
         }
         boundaryDBMS.registraVisualizzazione(link.get().id(), "Soggetto esterno");
         return link.get();

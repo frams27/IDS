@@ -3,8 +3,10 @@ package afam.presentation.boundary;
 import afam.presentation.ui.UiFactory;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 public class PannelloAccessoLink {
     private final Parent root;
@@ -12,12 +14,16 @@ public class PannelloAccessoLink {
     private final Button pulsanteConferma;
     private final Button pulsanteAnnulla;
 
-    public PannelloAccessoLink(UiFactory ui, Runnable tornaAllaStartingPage) {
+    public PannelloAccessoLink(UiFactory ui) {
+        Label titolo = new Label("Accesso tramite link");
+        titolo.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
         this.campoLink = ui.field("Inserisci il link di condivisione");
         this.pulsanteConferma = ui.button("Conferma", "primary");
         this.pulsanteAnnulla = ui.button("Annulla", "secondary");
-        this.root = ui.page("Accesso tramite link", tornaAllaStartingPage,
-                campoLink, new HBox(10, pulsanteConferma, pulsanteAnnulla));
+        VBox panel = new VBox(14, titolo, campoLink,
+                new HBox(10, pulsanteConferma, pulsanteAnnulla));
+        panel.getStyleClass().add("popup-card");
+        this.root = panel;
     }
 
     public Parent mostra() { return root; }

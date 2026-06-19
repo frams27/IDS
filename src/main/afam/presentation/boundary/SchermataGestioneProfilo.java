@@ -28,7 +28,7 @@ public class SchermataGestioneProfilo {
     }
 
     public Parent mostra(DatiCurriculari dati, ObservableList<ContenutoMultimediale> contenuti) {
-        this.listaContenuti = BoundarySupport.listaContenuti(contenuti);
+        this.listaContenuti = ui.listaContenuti(contenuti);
         listaContenuti.setPrefHeight(250);
         this.pulsanteAggiungiContenuti = ui.button("Aggiungi contenuti", "primary");
         this.pulsanteEliminaContenuti = ui.button("Elimina contenuti", "danger");

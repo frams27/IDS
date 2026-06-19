@@ -1,6 +1,5 @@
 package afam.application.control;
 
-import afam.application.dto.ApplicationException;
 import afam.domain.entity.AccountStudente;
 import afam.domain.entity.ContenutoMultimediale;
 import afam.domain.repository.BoundaryDBMS;
@@ -19,9 +18,6 @@ public class OrganizzaContenutiControl {
     }
 
     public void salvaNuovoOrdine(List<ContenutoMultimediale> contenutiOrdinati) throws Exception {
-        if (contenutiOrdinati == null || contenutiOrdinati.size() < 2) {
-            throw new ApplicationException("Servono almeno due contenuti per organizzarli.");
-        }
         boundaryDBMS.salvaOrdineContenuti(contenutiOrdinati);
     }
 }

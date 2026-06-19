@@ -14,10 +14,6 @@ public class FeedbackContenutiControl {
     }
 
     public List<LinkDiCondivisione> recuperaLink(AccountStudente account) throws Exception {
-        return boundaryDBMS.recuperaLinkDiCondivisione(account.id(), false);
-    }
-
-    public List<String> recuperaVisualizzazioni(LinkDiCondivisione link) throws Exception {
-        return boundaryDBMS.recuperaRigheVisualizzazione(link.id());
+        return boundaryDBMS.recuperaLinkDiCondivisione(account.id());
     }
 }

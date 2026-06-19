@@ -26,13 +26,13 @@ public class PaginaModificaDatiCurriculari {
     public Parent mostra(DatiCurriculari dati) {
         this.campoBiografia = ui.limitedTextArea("Biografia", dati.biografia(), 200);
         this.campoTitoliDiStudio = ui.limitedTextArea("Titoli di studio", dati.titoliDiStudio(), 200);
-        this.campoEsperienzeArtisticheEFormative = ui.limitedTextArea("Esperienze artistiche e formative", dati.esperienzeArtisticheEFormative(), 200);
+        this.campoEsperienzeArtisticheEFormative = ui.limitedTextArea("Esperienze Artistiche e Formative", dati.esperienzeArtisticheEFormative(), 200);
         this.pulsanteSalva = ui.button("Salva", "primary");
         this.pulsanteAnnulla = ui.button("Annulla", "secondary");
         this.root = ui.page("Modifica dati curriculari", tornaAllaGestioneProfilo,
                 new Label("Biografia"), campoBiografia,
                 new Label("Titoli di studio"), campoTitoliDiStudio,
-                new Label("Esperienze artistiche e formative"), campoEsperienzeArtisticheEFormative,
+                new Label("Esperienze Artistiche e Formative"), campoEsperienzeArtisticheEFormative,
                 new HBox(10, pulsanteSalva, pulsanteAnnulla));
         return root;
     }

@@ -9,47 +9,24 @@ public final class LinkDiCondivisione {
     private final String url;
     private final String descrizione;
     private final LocalDate dataDiScadenza;
-    private final boolean attivo;
     private final int numeroVisualizzazioni;
 
     public LinkDiCondivisione(int id, int accountStudenteId, String url, String descrizione,
-                              LocalDate dataDiScadenza, boolean attivo, int numeroVisualizzazioni) {
+                              LocalDate dataDiScadenza, int numeroVisualizzazioni) {
         this.id = id;
         this.accountStudenteId = accountStudenteId;
         this.url = url;
         this.descrizione = descrizione;
         this.dataDiScadenza = dataDiScadenza;
-        this.attivo = attivo;
         this.numeroVisualizzazioni = numeroVisualizzazioni;
     }
 
-    public int id() {
-        return id;
-    }
-
-    public int accountStudenteId() {
-        return accountStudenteId;
-    }
-
-    public String url() {
-        return url;
-    }
-
-    public String descrizione() {
-        return descrizione;
-    }
-
-    public LocalDate dataDiScadenza() {
-        return dataDiScadenza;
-    }
-
-    public boolean attivo() {
-        return attivo;
-    }
-
-    public int numeroVisualizzazioni() {
-        return numeroVisualizzazioni;
-    }
+    public int id() { return id; }
+    public int accountStudenteId() { return accountStudenteId; }
+    public String url() { return url; }
+    public String descrizione() { return descrizione; }
+    public LocalDate dataDiScadenza() { return dataDiScadenza; }
+    public int numeroVisualizzazioni() { return numeroVisualizzazioni; }
 
     @Override
     public boolean equals(Object o) {
@@ -57,7 +34,6 @@ public final class LinkDiCondivisione {
         if (!(o instanceof LinkDiCondivisione that)) return false;
         return id == that.id
                 && accountStudenteId == that.accountStudenteId
-                && attivo == that.attivo
                 && numeroVisualizzazioni == that.numeroVisualizzazioni
                 && Objects.equals(url, that.url)
                 && Objects.equals(descrizione, that.descrizione)
@@ -66,7 +42,7 @@ public final class LinkDiCondivisione {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, accountStudenteId, url, descrizione, dataDiScadenza, attivo, numeroVisualizzazioni);
+        return Objects.hash(id, accountStudenteId, url, descrizione, dataDiScadenza, numeroVisualizzazioni);
     }
 
     @Override
@@ -76,7 +52,6 @@ public final class LinkDiCondivisione {
                 + ", url=" + url
                 + ", descrizione=" + descrizione
                 + ", dataDiScadenza=" + dataDiScadenza
-                + ", attivo=" + attivo
                 + ", numeroVisualizzazioni=" + numeroVisualizzazioni + "]";
     }
 }

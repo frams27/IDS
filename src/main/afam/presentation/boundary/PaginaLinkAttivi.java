@@ -7,25 +7,25 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
-public class SchermataListaLinkAttivi {
+public class PaginaLinkAttivi {
     private final UiFactory ui;
     private final Runnable tornaAllaGestioneCondivisione;
     private Parent root;
     private ListView<LinkDiCondivisione> listaLinkAttivi;
-    private Button pulsanteDisattiva;
+    private Button pulsanteElimina;
 
-    public SchermataListaLinkAttivi(UiFactory ui, Runnable tornaAllaGestioneCondivisione) {
+    public PaginaLinkAttivi(UiFactory ui, Runnable tornaAllaGestioneCondivisione) {
         this.ui = ui;
         this.tornaAllaGestioneCondivisione = tornaAllaGestioneCondivisione;
     }
 
     public Parent mostra(ObservableList<LinkDiCondivisione> links) {
-        this.listaLinkAttivi = BoundarySupport.listaLink(links);
-        this.pulsanteDisattiva = ui.button("Disattiva", "danger");
-        this.root = ui.page("Link attivi", tornaAllaGestioneCondivisione, listaLinkAttivi, pulsanteDisattiva);
+        this.listaLinkAttivi = ui.listaLink(links);
+        this.pulsanteElimina = ui.button("Elimina", "danger");
+        this.root = ui.page("Link attivi", tornaAllaGestioneCondivisione, listaLinkAttivi, pulsanteElimina);
         return root;
     }
 
     public ListView<LinkDiCondivisione> listaLinkAttivi() { return listaLinkAttivi; }
-    public Button pulsanteDisattiva() { return pulsanteDisattiva; }
+    public Button pulsanteElimina() { return pulsanteElimina; }
 }

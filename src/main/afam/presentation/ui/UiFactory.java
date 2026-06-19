@@ -1,7 +1,11 @@
 package afam.presentation.ui;
 
+import afam.domain.entity.ContenutoMultimediale;
 import afam.domain.entity.DatiCurriculari;
+import afam.domain.entity.LinkDiCondivisione;
+import afam.util.FileUtil;
 import javafx.application.HostServices;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -138,6 +142,37 @@ public class UiFactory {
         a.setHeaderText(readableTitle);
         a.setContentText(message);
         a.showAndWait();
+    }
+
+    public ListView<ContenutoMultimediale> listaContenuti(ObservableList<ContenutoMultimediale> items) {
+        ListView<ContenutoMultimediale> list = new ListView<>(items);
+        list.setCellFactory(v -> new ListCell<>() {
+            @Override
+            protected void updateItem(ContenutoMultimediale item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) setText(null);
+                else setText("[" + item.tipo() + "] " + item.titolo() + " — "
+                        + FileUtil.humanSize(item.dimensione()) + " — " + item.formato());
+            }
+        });
+        return list;
+    }
+
+    public ListView<LinkDiCondivisione> listaLink(ObservableList<LinkDiCondivisione> links) {
+        ListView<LinkDiCondivisione> list = new ListView<>(links);
+        list.setPrefHeight(360);
+        list.setCellFactory(v -> new ListCell<>() {
+            @Override
+            protected void updateItem(LinkDiCondivisione item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) setText(null);
+                else setText(item.url()
+                        + " — Descrizione: " + (item.descrizione() == null || item.descrizione().isBlank() ? "nessuna" : item.descrizione())
+                        + " — Scadenza: " + (item.dataDiScadenza() == null ? "nessuna" : item.dataDiScadenza())
+                        + " — Visualizzazioni: " + item.numeroVisualizzazioni());
+            }
+        });
+        return list;
     }
 
     public void openFile(Path path) {

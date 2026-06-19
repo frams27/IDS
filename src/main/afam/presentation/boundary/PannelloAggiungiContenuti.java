@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 public class PannelloAggiungiContenuti {
     private final Parent root;
@@ -14,19 +15,23 @@ public class PannelloAggiungiContenuti {
     private final Button pulsanteAggiungiVideo;
     private final Button pulsanteAnnulla;
 
-    public PannelloAggiungiContenuti(UiFactory ui, Runnable tornaAllaGestioneProfilo) {
+    public PannelloAggiungiContenuti(UiFactory ui) {
+        Label titolo = new Label("Aggiungi contenuti");
+        titolo.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        Label descrizione = new Label("Seleziona il tipo di contenuto da caricare.");
+        descrizione.setWrapText(true);
+        descrizione.setMaxWidth(Double.MAX_VALUE);
         this.pulsanteAggiungiDocumento = ui.button("Aggiungi Documento", "primary");
         this.pulsanteAggiungiAudio = ui.button("Aggiungi Audio", "primary");
         this.pulsanteAggiungiFoto = ui.button("Aggiungi Foto", "primary");
         this.pulsanteAggiungiVideo = ui.button("Aggiungi Video", "primary");
         this.pulsanteAnnulla = ui.button("Annulla", "secondary");
-        this.root = ui.page("Aggiungi contenuti", tornaAllaGestioneProfilo,
-                new Label("Seleziona il tipo di contenuto da caricare."),
-                pulsanteAggiungiDocumento,
-                pulsanteAggiungiAudio,
-                pulsanteAggiungiFoto,
-                pulsanteAggiungiVideo,
+        VBox panel = new VBox(14, titolo, descrizione,
+                pulsanteAggiungiDocumento, pulsanteAggiungiAudio,
+                pulsanteAggiungiFoto, pulsanteAggiungiVideo,
                 new HBox(10, pulsanteAnnulla));
+        panel.getStyleClass().add("popup-card");
+        this.root = panel;
     }
 
     public Parent mostra() { return root; }

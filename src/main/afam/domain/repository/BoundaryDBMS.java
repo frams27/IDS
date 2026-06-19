@@ -44,9 +44,8 @@ public interface BoundaryDBMS {
     void salvaOrdineContenuti(List<ContenutoMultimediale> contenuti) throws SQLException;
 
     LinkDiCondivisione salvaLinkDiCondivisione(int accountStudenteId, List<Integer> contenutiIds, String descrizione, LocalDate dataDiScadenza) throws SQLException;
-    List<LinkDiCondivisione> recuperaLinkDiCondivisione(int accountStudenteId, boolean soloAttivi) throws SQLException;
+    List<LinkDiCondivisione> recuperaLinkDiCondivisione(int accountStudenteId) throws SQLException;
     Optional<LinkDiCondivisione> recuperaLinkValido(String url) throws SQLException;
     void registraVisualizzazione(int linkId, String etichettaVisualizzatore) throws SQLException;
-    List<String> recuperaRigheVisualizzazione(int linkId) throws SQLException;
     void disattivaLink(int linkId) throws SQLException;
 }

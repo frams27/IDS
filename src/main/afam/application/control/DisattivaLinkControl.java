@@ -14,12 +14,12 @@ public class DisattivaLinkControl {
         this.boundaryDBMS = boundaryDBMS;
     }
 
-    public List<LinkDiCondivisione> recuperaLinkAttivi(AccountStudente account) throws Exception {
-        return boundaryDBMS.recuperaLinkDiCondivisione(account.id(), true);
+    public List<LinkDiCondivisione> recuperaLink(AccountStudente account) throws Exception {
+        return boundaryDBMS.recuperaLinkDiCondivisione(account.id());
     }
 
     public void disattivaLink(LinkDiCondivisione link) throws Exception {
-        if (link == null) throw new ApplicationException("Seleziona il link da disattivare.");
+        if (link == null) throw new ApplicationException("Seleziona il link da eliminare.");
         boundaryDBMS.disattivaLink(link.id());
     }
 }

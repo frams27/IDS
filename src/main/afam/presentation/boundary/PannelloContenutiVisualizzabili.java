@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.LinkedHashMap;
@@ -16,17 +17,21 @@ import java.util.stream.Collectors;
 
 public class PannelloContenutiVisualizzabili {
     private final UiFactory ui;
-    private final Runnable tornaAllaPaginaContenutiVisualizzabili;
     private Parent root;
     private final Map<ContenutoMultimediale, CheckBox> checkMap = new LinkedHashMap<>();
     private Button pulsanteConferma;
+    private Button pulsanteAnnulla;
 
-    public PannelloContenutiVisualizzabili(UiFactory ui, Runnable tornaAllaPaginaContenutiVisualizzabili) {
+    public PannelloContenutiVisualizzabili(UiFactory ui) {
         this.ui = ui;
-        this.tornaAllaPaginaContenutiVisualizzabili = tornaAllaPaginaContenutiVisualizzabili;
     }
 
     public Parent mostra(ObservableList<ContenutoMultimediale> contenuti) {
+        Label titolo = new Label("Seleziona contenuti");
+        titolo.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        Label descrizione = new Label("Seleziona uno o più contenuti.");
+        descrizione.setWrapText(true);
+        descrizione.setMaxWidth(Double.MAX_VALUE);
         checkMap.clear();
         VBox checks = new VBox(8);
         for (ContenutoMultimediale item : contenuti) {
@@ -35,8 +40,11 @@ public class PannelloContenutiVisualizzabili {
             checks.getChildren().add(cb);
         }
         this.pulsanteConferma = ui.button("Conferma", "primary");
-        this.root = ui.page("Pannello contenuti visualizzabili", tornaAllaPaginaContenutiVisualizzabili,
-                new Label("Seleziona uno o piu contenuti."), checks, pulsanteConferma);
+        this.pulsanteAnnulla = ui.button("Annulla", "secondary");
+        VBox panel = new VBox(14, titolo, descrizione, checks,
+                new HBox(10, pulsanteConferma, pulsanteAnnulla));
+        panel.getStyleClass().add("popup-card");
+        this.root = panel;
         return root;
     }
 
@@ -47,4 +55,5 @@ public class PannelloContenutiVisualizzabili {
                 .collect(Collectors.toList());
     }
     public Button pulsanteConferma() { return pulsanteConferma; }
+    public Button pulsanteAnnulla() { return pulsanteAnnulla; }
 }

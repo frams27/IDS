@@ -12,7 +12,7 @@ public class PaginaContenutiVisualizzabili {
     public PaginaContenutiVisualizzabili(UiFactory ui, Runnable tornaAllaGestioneCondivisione) {
         this.pulsanteSelezionaContenuti = ui.button("Seleziona contenuti", "primary");
         this.root = ui.page("Contenuti visualizzabili", tornaAllaGestioneCondivisione,
-                new Label("Scegli quali contenuti rendere accessibili tramite il link di condivisione."),
+                new Label("Clicca sul tasto per selezionare i contenuti visibili dal link."),
                 pulsanteSelezionaContenuti);
     }
 
