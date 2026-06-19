@@ -4,7 +4,7 @@ import afam.application.dto.ApplicationException;
 import afam.application.session.SessioneCorrente;
 import afam.domain.entity.AccountStudente;
 import afam.domain.repository.BoundaryDBMS;
-import afam.infrastructure.provider.BoundaryProviderEsterno;
+import afam.domain.provider.BoundaryProviderEsterno;
 
 public class AutenticazioneEsternaControl {
     private final BoundaryDBMS boundaryDBMS;

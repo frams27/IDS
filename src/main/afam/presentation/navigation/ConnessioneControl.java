@@ -1,13 +1,13 @@
-package afam.application.control;
+package afam.presentation.navigation;
 
-public class ConnessioneControl {
+class ConnessioneControl {
     private Runnable schermataPrecedente;
 
-    public void memorizzaSchermata(Runnable screenRenderer) {
+    void memorizzaSchermata(Runnable screenRenderer) {
         this.schermataPrecedente = screenRenderer;
     }
 
-    public void ripristinaSchermataPrecedente() {
+    void ripristinaSchermataPrecedente() {
         if (schermataPrecedente != null) {
             schermataPrecedente.run();
         }

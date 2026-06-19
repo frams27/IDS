@@ -8,9 +8,8 @@ import afam.domain.entity.AccountStudente;
 import afam.domain.entity.ContenutoMultimediale;
 import afam.domain.entity.DatiCurriculari;
 import afam.domain.entity.LinkDiCondivisione;
+import afam.domain.provider.BoundaryProviderEsterno;
 import afam.domain.repository.BoundaryDBMS;
-import afam.infrastructure.provider.ProviderEsternoSimulato;
-import afam.infrastructure.repository.SQLiteBoundaryDBMS;
 import afam.presentation.boundary.*;
 import afam.presentation.ui.UiFactory;
 import javafx.application.HostServices;
@@ -86,14 +85,14 @@ public class AppNavigator {
     private Parent currentScreenRoot;
     private Runnable ripristinaSchermataCorrente;
 
-    public AppNavigator(HostServices hostServices) {
+    public AppNavigator(HostServices hostServices, BoundaryDBMS boundaryDBMS, BoundaryProviderEsterno boundaryProviderEsterno) {
         this.hostServices = hostServices;
-        this.boundaryDBMS = new SQLiteBoundaryDBMS();
+        this.boundaryDBMS = boundaryDBMS;
         this.sessioneCorrente = new SessioneCorrente();
         this.registrazioneControl = new RegistrazioneControl(boundaryDBMS);
         this.autenticazioneCredenzialiControl = new AutenticazioneCredenzialiControl(boundaryDBMS, sessioneCorrente);
         this.dueFAControl = new DueFAControl(boundaryDBMS, sessioneCorrente);
-        this.autenticazioneEsternaControl = new AutenticazioneEsternaControl(boundaryDBMS, new ProviderEsternoSimulato(), sessioneCorrente);
+        this.autenticazioneEsternaControl = new AutenticazioneEsternaControl(boundaryDBMS, boundaryProviderEsterno, sessioneCorrente);
         this.passwordDimenticataControl = new PasswordDimenticataControl(boundaryDBMS);
         this.logoutControl = new LogoutControl(boundaryDBMS, sessioneCorrente);
         this.modificaPasswordControl = new ModificaPasswordControl(boundaryDBMS, sessioneCorrente);
