@@ -192,7 +192,7 @@ public class UiFactory {
 
     private VBox sezioneDatiCurriculariSolaLettura(String title, String value) {
         Label label = new Label(title);
-        label.setStyle("-fx-font-weight: bold;");
+        label.getStyleClass().add("curriculum-label");
         label.setMaxWidth(Double.MAX_VALUE);
         label.setAlignment(Pos.CENTER);
 

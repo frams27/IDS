@@ -10,9 +10,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Set;
 
 public class AggiungiContenutiControl {
     public static final long MAX_FILE_SIZE_BYTES = 512L * 1024L * 1024L;
+    private static final Set<String> FORMATI_CONSENTITI = Set.of(
+            "pdf", "doc", "docx", "txt", "odt",
+            "mp3", "wav", "ogg", "flac", "aac",
+            "jpg", "jpeg", "png", "gif", "bmp", "webp",
+            "mp4", "avi", "mov", "mkv", "wmv"
+    );
     private final BoundaryDBMS boundaryDBMS;
 
     public AggiungiContenutiControl(BoundaryDBMS boundaryDBMS) {
@@ -28,6 +35,8 @@ public class AggiungiContenutiControl {
         long dimensione = Files.size(fileSelezionato);
         if (dimensione > MAX_FILE_SIZE_BYTES) throw new ApplicationException("ERRORE: la dimensione massima consentita è 512 MB");
         String formato = FileUtil.extension(fileSelezionato.getFileName().toString());
+        if (!FORMATI_CONSENTITI.contains(formato.toLowerCase()))
+            throw new ApplicationException("Formato file non supportato: " + formato);
         Files.createDirectories(boundaryDBMS.cartellaUpload());
         String safeName = System.currentTimeMillis() + "_" + fileSelezionato.getFileName().toString().replaceAll("[^A-Za-z0-9._-]", "_");
         Path destinazione = boundaryDBMS.cartellaUpload().resolve(safeName);

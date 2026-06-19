@@ -137,6 +137,10 @@
 
 /*aggiungere stile pannelli*/
 
+.curriculum-label {
+    -fx-font-weight: bold;
+}
+
 .popup-title {
     -fx-font-weight: bold;
     -fx-font-size: 16px;

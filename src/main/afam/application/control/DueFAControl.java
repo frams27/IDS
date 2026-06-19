@@ -9,11 +9,15 @@ import afam.util.SecurityUtil;
 public class DueFAControl {
     private static final int MAX_TENTATIVI = 5;
 
+    private record OtpSession(String codice, int idAccount, int tentativi) {
+        OtpSession incrementaTentativi() {
+            return new OtpSession(codice, idAccount, tentativi + 1);
+        }
+    }
+
     private final BoundaryDBMS boundaryDBMS;
     private final SessioneCorrente sessioneCorrente;
-    private int counterTentativi;
-    private String codiceOtpGenerato;
-    private int idAccountOtpGenerato = -1; //per inizializzare senza valori garbage
+    private OtpSession otpSession = null;
 
     public DueFAControl(BoundaryDBMS boundaryDBMS, SessioneCorrente sessioneCorrente) {
         this.boundaryDBMS = boundaryDBMS;
@@ -22,35 +26,27 @@ public class DueFAControl {
 
     public String generaOTP() throws Exception {
         AccountStudente account = sessioneCorrente.richiediAccountStudente();
-        codiceOtpGenerato = SecurityUtil.generateOtp();
-        idAccountOtpGenerato = account.idAccount(); //salvataggio acc per cui ha generato otp
-        counterTentativi = 0;
-        return codiceOtpGenerato;
+        otpSession = new OtpSession(SecurityUtil.generateOtp(), account.idAccount(), 0);
+        return otpSession.codice();
     }
 
     public void verificaOTP(String codice) throws Exception {
         AccountStudente account = sessioneCorrente.richiediAccountStudente();
         ValidazioneControlSupport.richiediTesto(codice, "Inserisci il codice OTP.");
-        if (codiceOtpGenerato == null || idAccountOtpGenerato != account.idAccount()) {
+        if (otpSession == null || otpSession.idAccount() != account.idAccount()) {
             throw new ApplicationException("Clicca sul pulsante Genera OTP per generare il codice");
         }
-        counterTentativi++;
-        if (codiceOtpGenerato.equals(codice.trim())) {
+        otpSession = otpSession.incrementaTentativi();
+        if (otpSession.codice().equals(codice.trim())) {
             boundaryDBMS.aggiornaStatoLogin(account.idAccount(), true);
-            cancellaOTP();
+            otpSession = null;
             return;
         }
-        if (counterTentativi >= MAX_TENTATIVI) {
+        if (otpSession.tentativi() >= MAX_TENTATIVI) {
+            otpSession = null;
             sessioneCorrente.terminaSessione();
-            cancellaOTP();
             throw new ApplicationException("Numero massimo di tentativi raggiunto. Sessione annullata.");
         }
         throw new ApplicationException("Codice errato");
-    }
-
-    private void cancellaOTP() {
-        codiceOtpGenerato = null;
-        idAccountOtpGenerato = -1;
-        counterTentativi = 0;
     }
 }
