@@ -35,7 +35,7 @@ public class PannelloContenutiVisualizzabili {
         checkMap.clear();
         VBox checks = new VBox(8);
         for (ContenutoMultimediale item : contenuti) {
-            CheckBox cb = new CheckBox("[" + item.tipo() + "] " + item.titolo() + " - " + item.formato());
+            CheckBox cb = new CheckBox(item.titolo() + " - " + item.formato());
             checkMap.put(item, cb);
             checks.getChildren().add(cb);
         }

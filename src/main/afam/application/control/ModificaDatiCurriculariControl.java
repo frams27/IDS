@@ -12,13 +12,13 @@ public class ModificaDatiCurriculariControl {
     }
 
     public DatiCurriculari recuperaDatiCurriculari(AccountStudente account) throws Exception {
-        return boundaryDBMS.recuperaDatiCurriculari(account.id());
+        return boundaryDBMS.recuperaDatiCurriculari(account.idAccount());
     }
 
     public void salvaDatiCurriculari(AccountStudente account, String biografia, String titoliDiStudio, String esperienzeArtisticheEFormative) throws Exception {
         ValidazioneControlSupport.verificaLimiteTesto(biografia, "Biografia");
         ValidazioneControlSupport.verificaLimiteTesto(titoliDiStudio, "Titoli di studio");
         ValidazioneControlSupport.verificaLimiteTesto(esperienzeArtisticheEFormative, "Esperienze artistiche e formative");
-        boundaryDBMS.salvaDatiCurriculari(account.id(), biografia, titoliDiStudio, esperienzeArtisticheEFormative);
+        boundaryDBMS.salvaDatiCurriculari(account.idAccount(), biografia, titoliDiStudio, esperienzeArtisticheEFormative);
     }
 }

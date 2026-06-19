@@ -577,7 +577,7 @@ public class AppNavigator {
         var file = chooser.showOpenDialog(stage);
         if (file != null) {
             runUserAction(() -> {
-                aggiungiContenutiControl.aggiungiContenuto(requireStudent(), file.toPath(), tipoContenuto);
+                aggiungiContenutiControl.aggiungiContenuto(requireStudent(), file.toPath());
                 mostra(Vista.PANNELLO_DI_NOTIFICA, "Caricamento avvenuto con successo",
                         (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
             });

@@ -24,7 +24,7 @@ public class AutenticazioneEsternaControl {
             throw new ApplicationException("Autenticazione tramite provider esterno fallita o annullata.");
         }
         AccountStudente account = boundaryDBMS.recuperaOCreaAccountProvider(normalizedEmail);
-        boundaryDBMS.aggiornaStatoLogin(account.id(), true);
+        boundaryDBMS.aggiornaStatoLogin(account.idAccount(), true);
         sessioneCorrente.avviaSessione(account);
         return account;
     }

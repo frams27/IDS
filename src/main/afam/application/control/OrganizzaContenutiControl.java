@@ -14,7 +14,7 @@ public class OrganizzaContenutiControl {
     }
 
     public List<ContenutoMultimediale> recuperaContenuti(AccountStudente account) throws Exception {
-        return boundaryDBMS.recuperaContenuti(account.id());
+        return boundaryDBMS.recuperaContenuti(account.idAccount());
     }
 
     public void salvaNuovoOrdine(List<ContenutoMultimediale> contenutiOrdinati) throws Exception {

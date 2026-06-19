@@ -25,26 +25,26 @@ public interface BoundaryDBMS {
     Optional<AccountStudente> cercaAccountPerEmail(String email) throws SQLException;
     AccountStudente recuperaOCreaAccountProvider(String email) throws SQLException;
     Optional<AccountStudente> autentica(String email, String password) throws SQLException;
-    boolean verificaPassword(int accountStudenteId, String password) throws SQLException;
-    void aggiornaPassword(int accountStudenteId, String nuovaPassword) throws SQLException;
-    void aggiornaStatoLogin(int accountStudenteId, boolean logged) throws SQLException;
+    boolean verificaPassword(int idAccount, String password) throws SQLException;
+    void aggiornaPassword(int idAccount, String nuovaPassword) throws SQLException;
+    void aggiornaStatoLogin(int idAccount, boolean logged) throws SQLException;
 
 
-    void salvaTokenRipristino(int accountStudenteId, String token) throws SQLException;
-    boolean verificaTokenRipristino(int accountStudenteId, String token) throws SQLException;
-    void cancellaTokenRipristino(int accountStudenteId) throws SQLException;
+    void salvaTokenRipristino(int idAccount, String token) throws SQLException;
+    boolean verificaTokenRipristino(int idAccount, String token) throws SQLException;
+    void cancellaTokenRipristino(int idAccount) throws SQLException;
 
-    DatiCurriculari recuperaDatiCurriculari(int accountStudenteId) throws SQLException;
-    void salvaDatiCurriculari(int accountStudenteId, String biografia, String titoliDiStudio, String esperienzeArtisticheEFormative) throws SQLException;
+    DatiCurriculari recuperaDatiCurriculari(int idAccount) throws SQLException;
+    void salvaDatiCurriculari(int idAccount, String biografia, String titoliDiStudio, String esperienzeArtisticheEFormative) throws SQLException;
 
-    void salvaContenuto(int accountStudenteId, String titolo, String tipo, String nomeOriginale, String formato, long dimensione, Path percorsoFile) throws SQLException;
-    List<ContenutoMultimediale> recuperaContenuti(int accountStudenteId) throws SQLException;
+    void salvaContenuto(int idAccount, String titolo, String formato, long dimensione, Path percorsoFile) throws SQLException;
+    List<ContenutoMultimediale> recuperaContenuti(int idAccount) throws SQLException;
     List<ContenutoMultimediale> recuperaContenutiPerLink(int linkId) throws SQLException;
     void eliminaContenuto(int contenutoId) throws SQLException, IOException;
     void salvaOrdineContenuti(List<ContenutoMultimediale> contenuti) throws SQLException;
 
-    LinkDiCondivisione salvaLinkDiCondivisione(int accountStudenteId, List<Integer> contenutiIds, String descrizione, LocalDate dataDiScadenza) throws SQLException;
-    List<LinkDiCondivisione> recuperaLinkDiCondivisione(int accountStudenteId) throws SQLException;
+    LinkDiCondivisione salvaLinkDiCondivisione(int idAccount, List<Integer> contenutiIds, String descrizione, LocalDate dataDiScadenza) throws SQLException;
+    List<LinkDiCondivisione> recuperaLinkDiCondivisione(int idAccount) throws SQLException;
     Optional<LinkDiCondivisione> recuperaLinkValido(String url) throws SQLException;
     void registraVisualizzazione(int linkId, String etichettaVisualizzatore) throws SQLException;
     void disattivaLink(int linkId) throws SQLException;

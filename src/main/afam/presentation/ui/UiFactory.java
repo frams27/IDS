@@ -135,7 +135,7 @@ public class UiFactory {
         return box;
     }
 
-    public void alert(Alert.AlertType type, String title, String message) {
+    private void alert(Alert.AlertType type, String title, String message) {
         Alert a = new Alert(type);
         String readableTitle = title == null || title.isBlank() ? "Notifica" : title;
         a.setTitle(readableTitle);
@@ -151,8 +151,7 @@ public class UiFactory {
             protected void updateItem(ContenutoMultimediale item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) setText(null);
-                else setText("[" + item.tipo() + "] " + item.titolo() + " — "
-                        + FileUtil.humanSize(item.dimensione()) + " — " + item.formato());
+                else setText(item.titolo() + " — " + FileUtil.humanSize(item.dimensione()) + " — " + item.formato());
             }
         });
         return list;

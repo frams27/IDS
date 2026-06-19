@@ -13,8 +13,6 @@ public class PaginaFeedbackContenuti {
     private final Runnable tornaAllaGestioneCondivisione;
     private Parent root;
     private ListView<LinkDiCondivisione> listaLink;
-    private Button pulsanteTornaIndietro;
-
     public PaginaFeedbackContenuti(UiFactory ui, Runnable tornaAllaGestioneCondivisione) {
         this.ui = ui;
         this.tornaAllaGestioneCondivisione = tornaAllaGestioneCondivisione;
@@ -22,13 +20,12 @@ public class PaginaFeedbackContenuti {
 
     public Parent mostra(ObservableList<LinkDiCondivisione> links) {
         this.listaLink = ui.listaLink(links);
-        this.pulsanteTornaIndietro = ui.button("Torna indietro", "secondary");
-        this.pulsanteTornaIndietro.setOnAction(e -> tornaAllaGestioneCondivisione.run());
+        Button pulsanteTornaIndietro = ui.button("Torna indietro", "secondary");
+        pulsanteTornaIndietro.setOnAction(e -> tornaAllaGestioneCondivisione.run());
         this.root = ui.page("Feedback contenuti", tornaAllaGestioneCondivisione,
                 listaLink, new HBox(10, pulsanteTornaIndietro));
         return root;
     }
 
     public ListView<LinkDiCondivisione> listaLink() { return listaLink; }
-    public Button pulsanteTornaIndietro() { return pulsanteTornaIndietro; }
 }

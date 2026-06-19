@@ -27,21 +27,21 @@ public class PasswordDimenticataControl {
 
     public String generaLinkRipristino(AccountStudente account) throws SQLException {
         String token = UUID.randomUUID().toString();
-        boundaryDBMS.salvaTokenRipristino(account.id(), token);
+        boundaryDBMS.salvaTokenRipristino(account.idAccount(), token);
         return token;
     }
 
     public void impostaNuovaPassword(AccountStudente account, String token, String nuovaPassword, String confermaNuovaPassword) throws Exception {
         ValidazioneControlSupport.richiediTesto(nuovaPassword, "Inserisci la nuova password.");
         ValidazioneControlSupport.richiediTesto(confermaNuovaPassword, "Inserisci la conferma della nuova password.");
-        if (!boundaryDBMS.verificaTokenRipristino(account.id(), token)) {
+        if (!boundaryDBMS.verificaTokenRipristino(account.idAccount(), token)) {
             throw new ApplicationException("Link di ripristino non valido.");
         }
         if (!nuovaPassword.equals(confermaNuovaPassword)) {
             throw new ApplicationException("ATTENZIONE: le due password non corrispondono!");
         }
         ValidazioneControlSupport.richiediPasswordSicura(nuovaPassword);
-        boundaryDBMS.aggiornaPassword(account.id(), nuovaPassword);
-        boundaryDBMS.cancellaTokenRipristino(account.id());
+        boundaryDBMS.aggiornaPassword(account.idAccount(), nuovaPassword);
+        boundaryDBMS.cancellaTokenRipristino(account.idAccount());
     }
 }

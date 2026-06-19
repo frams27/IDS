@@ -15,11 +15,11 @@ public class DisattivaLinkControl {
     }
 
     public List<LinkDiCondivisione> recuperaLink(AccountStudente account) throws Exception {
-        return boundaryDBMS.recuperaLinkDiCondivisione(account.id());
+        return boundaryDBMS.recuperaLinkDiCondivisione(account.idAccount());
     }
 
     public void disattivaLink(LinkDiCondivisione link) throws Exception {
         if (link == null) throw new ApplicationException("Seleziona il link da eliminare.");
-        boundaryDBMS.disattivaLink(link.id());
+        boundaryDBMS.disattivaLink(link.idLink());
     }
 }

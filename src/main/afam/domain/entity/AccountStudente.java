@@ -3,16 +3,16 @@ package afam.domain.entity;
 import java.util.Objects;
 
 public final class AccountStudente {
-    private final int id;
+    private final int idAccount;
     private final String email;
 
-    public AccountStudente(int id, String email) {
-        this.id = id;
+    public AccountStudente(int idAccount, String email) {
+        this.idAccount = idAccount;
         this.email = email;
     }
 
-    public int id() {
-        return id;
+    public int idAccount() {
+        return idAccount;
     }
 
     public String email() {
@@ -23,16 +23,16 @@ public final class AccountStudente {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AccountStudente that)) return false;
-        return id == that.id && Objects.equals(email, that.email);
+        return idAccount == that.idAccount && Objects.equals(email, that.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email);
+        return Objects.hash(idAccount, email);
     }
 
     @Override
     public String toString() {
-        return "AccountStudente[id=" + id + ", email=" + email + "]";
+        return "AccountStudente[idAccount=" + idAccount + ", email=" + email + "]";
     }
 }

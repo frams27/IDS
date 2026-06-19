@@ -19,7 +19,7 @@ public class ModificaPasswordControl {
         ValidazioneControlSupport.richiediTesto(vecchiaPassword, "Inserisci la vecchia password.");
         ValidazioneControlSupport.richiediTesto(nuovaPassword, "Inserisci la nuova password.");
         ValidazioneControlSupport.richiediTesto(confermaNuovaPassword, "Inserisci la conferma della nuova password.");
-        if (!boundaryDBMS.verificaPassword(account.id(), vecchiaPassword)) {
+        if (!boundaryDBMS.verificaPassword(account.idAccount(), vecchiaPassword)) {
             throw new ApplicationException("Password attuale errata");
         }
         if (!nuovaPassword.equals(confermaNuovaPassword)) {
@@ -29,6 +29,6 @@ public class ModificaPasswordControl {
             throw new ApplicationException("La nuova password non può essere uguale a quella attuale");
         }
         ValidazioneControlSupport.richiediPasswordSicura(nuovaPassword);
-        boundaryDBMS.aggiornaPassword(account.id(), nuovaPassword);
+        boundaryDBMS.aggiornaPassword(account.idAccount(), nuovaPassword);
     }
 }

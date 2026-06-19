@@ -24,7 +24,7 @@ public class CreazioneLinkControl {
         if (dataDiScadenza != null && dataDiScadenza.isBefore(LocalDate.now())) {
             throw new ApplicationException("La data di scadenza non può essere precedente alla data odierna.");
         }
-        List<Integer> ids = contenutiSelezionati.stream().map(ContenutoMultimediale::id).toList();
-        return boundaryDBMS.salvaLinkDiCondivisione(account.id(), ids, descrizione, dataDiScadenza);
+        List<Integer> ids = contenutiSelezionati.stream().map(ContenutoMultimediale::idContenuto).toList();
+        return boundaryDBMS.salvaLinkDiCondivisione(account.idAccount(), ids, descrizione, dataDiScadenza);
     }
 }

@@ -14,12 +14,12 @@ public class EliminaContenutiControl {
     }
 
     public List<ContenutoMultimediale> recuperaContenutiEliminabili(AccountStudente account) throws Exception {
-        return boundaryDBMS.recuperaContenuti(account.id());
+        return boundaryDBMS.recuperaContenuti(account.idAccount());
     }
 
     public void eliminaContenuti(List<ContenutoMultimediale> selezionati) throws Exception {
         for (ContenutoMultimediale contenuto : selezionati) {
-            boundaryDBMS.eliminaContenuto(contenuto.id());
+            boundaryDBMS.eliminaContenuto(contenuto.idContenuto());
         }
     }
 }

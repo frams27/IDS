@@ -22,14 +22,14 @@ public class VisualizzazioneContenutiControl {
         if (link.isEmpty()) {
             throw new ApplicationException("Link Inesistente.");
         }
-        boundaryDBMS.registraVisualizzazione(link.get().id(), "Soggetto esterno");
+        boundaryDBMS.registraVisualizzazione(link.get().idLink(), "Soggetto esterno");
         return link.get();
     }
 
     public PortfolioCondiviso recuperaPortfolioCondiviso(LinkDiCondivisione link) throws Exception {
         return new PortfolioCondiviso(
-                boundaryDBMS.recuperaDatiCurriculari(link.accountStudenteId()),
-                boundaryDBMS.recuperaContenutiPerLink(link.id())
+                boundaryDBMS.recuperaDatiCurriculari(link.idStudente()),
+                boundaryDBMS.recuperaContenutiPerLink(link.idLink())
         );
     }
 }

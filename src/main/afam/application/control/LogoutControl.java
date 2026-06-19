@@ -14,7 +14,7 @@ public class LogoutControl {
 
     public void eseguiLogout() throws Exception {
         if (sessioneCorrente.accountStudente().isPresent()) {
-            boundaryDBMS.aggiornaStatoLogin(sessioneCorrente.accountStudente().get().id(), false);
+            boundaryDBMS.aggiornaStatoLogin(sessioneCorrente.accountStudente().get().idAccount(), false);
         }
         sessioneCorrente.terminaSessione();
     }

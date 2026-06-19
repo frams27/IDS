@@ -23,7 +23,7 @@ public class DueFAControl {
     public String generaOTP() throws Exception {
         AccountStudente account = sessioneCorrente.richiediAccountStudente();
         codiceOtpGenerato = SecurityUtil.generateOtp();
-        idAccountOtpGenerato = account.id(); //salvataggio acc per cui ha generato otp
+        idAccountOtpGenerato = account.idAccount(); //salvataggio acc per cui ha generato otp
         counterTentativi = 0;
         return codiceOtpGenerato;
     }
@@ -31,12 +31,12 @@ public class DueFAControl {
     public void verificaOTP(String codice) throws Exception {
         AccountStudente account = sessioneCorrente.richiediAccountStudente();
         ValidazioneControlSupport.richiediTesto(codice, "Inserisci il codice OTP.");
-        if (codiceOtpGenerato == null || idAccountOtpGenerato != account.id()) {
+        if (codiceOtpGenerato == null || idAccountOtpGenerato != account.idAccount()) {
             throw new ApplicationException("Clicca sul pulsante Genera OTP per generare il codice");
         }
         counterTentativi++;
         if (codiceOtpGenerato.equals(codice.trim())) {
-            boundaryDBMS.aggiornaStatoLogin(account.id(), true);
+            boundaryDBMS.aggiornaStatoLogin(account.idAccount(), true);
             cancellaOTP();
             return;
         }

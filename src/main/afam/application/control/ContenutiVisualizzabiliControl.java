@@ -15,7 +15,7 @@ public class ContenutiVisualizzabiliControl {
     }
 
     public List<ContenutoMultimediale> recuperaContenutiDisponibili(AccountStudente account) throws Exception {
-        return boundaryDBMS.recuperaContenuti(account.id());
+        return boundaryDBMS.recuperaContenuti(account.idAccount());
     }
 
     public void verificaSelezione(List<ContenutoMultimediale> selezionati) throws ApplicationException {
