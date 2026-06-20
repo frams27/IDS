@@ -1,5 +1,5 @@
 .root {
-    -fx-font-family: "Arial", sans-serif;
+    -fx-font-family: "Arial";
     -fx-background-color: #eeeeee;
 }
 
@@ -47,20 +47,68 @@
     -fx-cursor: hand;
 }
 
+.button:hover {
+    -fx-background-color: #cccccc;
+}
+
+.button:pressed {
+    -fx-background-color: #bbbbbb;
+}
+
+.button:focused {
+    -fx-border-color: #555555;
+}
+
 .primary {
     -fx-background-color: #cfcfcf;
+    -fx-text-fill: #111111;
+}
+
+.button.primary:hover {
+    -fx-background-color: #bfbfbf;
+}
+
+.button.primary:pressed {
+    -fx-background-color: #afafaf;
 }
 
 .secondary {
     -fx-background-color: #eeeeee;
+    -fx-text-fill: #111111;
+}
+
+.button.secondary:hover {
+    -fx-background-color: #dedede;
+}
+
+.button.secondary:pressed {
+    -fx-background-color: #cecece;
 }
 
 .danger {
     -fx-background-color: #e5c7c7;
+    -fx-text-fill: #111111;
+}
+
+.button.danger:hover {
+    -fx-background-color: #d9b5b5;
+}
+
+.button.danger:pressed {
+    -fx-background-color: #cca3a3;
 }
 
 .success {
     -fx-background-color: #c9e2c9;
+    -fx-text-fill: #111111;
+}
+
+.button.success:hover {
+    -fx-background-color: #b7d6b7;
+}
+
+.button.success:pressed {
+    -fx-background-color: #a5caa5;
 }
 
 .text-field,
@@ -69,6 +117,7 @@
 .date-picker,
 .list-view {
     -fx-border-color: #999999;
+    -fx-border-width: 1;
     -fx-background-color: white;
 }
 
@@ -116,6 +165,9 @@
 .readonly-area {
     -fx-background-color: #f8f8f8;
     -fx-border-color: #999999;
+}
+
+.readonly-area .content {
     -fx-text-fill: #111111;
 }
 
@@ -134,8 +186,6 @@
     -fx-alignment: center;
     -fx-max-width: 460;
 }
-
-/*aggiungere stile pannelli*/
 
 .curriculum-label {
     -fx-font-weight: bold;
