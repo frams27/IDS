@@ -12,13 +12,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Boundary tecnica verso il DBMS.
- * Le control comunicano con questa interfaccia e non direttamente con SQLite.
- */
+/* Le control comunicano con questa interfaccia e non direttamente con SQLite. 
+    elenca cosa si può chiedere al database, senza dire il come. */
+
 public interface BoundaryDBMS {
-    void inizializza() throws Exception;
-    Path cartellaUpload();
+    void inizializza() throws Exception; //Crea le tabelle se non esistono e prepara l'ambiente. Può lanciare eccezioni.
+    Path cartellaUpload(); // Restituisce il percorso della cartella dove salvare i file caricati.
 
     boolean emailEsiste(String email) throws SQLException;
     void salvaNuovoAccount(String email, String password) throws SQLException;
