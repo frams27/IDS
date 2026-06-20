@@ -41,7 +41,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
         try (Connection c = connect(); Statement st = c.createStatement()) {
             st.execute("PRAGMA foreign_keys = ON");
             st.execute("""
-                    CREATE TABLE IF NOT EXISTS accounts (
+                    CREATE TABLE IF NOT EXISTS AccountStudente (
                         idAccount INTEGER PRIMARY KEY AUTOINCREMENT,
                         email TEXT NOT NULL UNIQUE,
                         pwd TEXT NOT NULL,
@@ -52,18 +52,18 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
                     )
                     """);
             st.execute("""
-                    CREATE TABLE IF NOT EXISTS curriculum (
+                    CREATE TABLE IF NOT EXISTS DatiCurriculari (
                         idDati INTEGER PRIMARY KEY AUTOINCREMENT,
                         idAccount INTEGER NOT NULL UNIQUE,
                         biografia TEXT DEFAULT '',
                         titoliDiStudio TEXT DEFAULT '',
-                        esperienzeArtistiche TEXT DEFAULT '',
+                        esperienze TEXT DEFAULT '',
                         updatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                        FOREIGN KEY(idAccount) REFERENCES accounts(idAccount) ON DELETE CASCADE
+                        FOREIGN KEY(idAccount) REFERENCES AccountStudente(idAccount) ON DELETE CASCADE
                     )
                     """);
             st.execute("""
-                    CREATE TABLE IF NOT EXISTS contents (
+                    CREATE TABLE IF NOT EXISTS ContenutoMultimediale (
                         idContenuto INTEGER PRIMARY KEY AUTOINCREMENT,
                         idAccount INTEGER NOT NULL,
                         titolo TEXT NOT NULL,
@@ -72,11 +72,11 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
                         filePath TEXT NOT NULL,
                         posizione INTEGER NOT NULL,
                         createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                        FOREIGN KEY(idAccount) REFERENCES accounts(idAccount) ON DELETE CASCADE
+                        FOREIGN KEY(idAccount) REFERENCES AccountStudente(idAccount) ON DELETE CASCADE
                     )
                     """);
             st.execute("""
-                    CREATE TABLE IF NOT EXISTS share_links (
+                    CREATE TABLE IF NOT EXISTS LinkCondivisione (
                         idLink INTEGER PRIMARY KEY AUTOINCREMENT,
                         idStudente INTEGER NOT NULL,
                         url TEXT NOT NULL UNIQUE,
@@ -84,25 +84,16 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
                         dataDiScadenza TEXT,
                         numeroVisualizzazioni INTEGER NOT NULL DEFAULT 0,
                         createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                        FOREIGN KEY(idStudente) REFERENCES accounts(idAccount) ON DELETE CASCADE
+                        FOREIGN KEY(idStudente) REFERENCES AccountStudente(idAccount) ON DELETE CASCADE
                     )
                     """);
             st.execute("""
-                    CREATE TABLE IF NOT EXISTS share_link_contents (
+                    CREATE TABLE IF NOT EXISTS ContenutiVisibili (
                         linkId INTEGER NOT NULL,
                         contentId INTEGER NOT NULL,
                         PRIMARY KEY(linkId, contentId),
-                        FOREIGN KEY(linkId) REFERENCES share_links(idLink) ON DELETE CASCADE,
-                        FOREIGN KEY(contentId) REFERENCES contents(idContenuto) ON DELETE CASCADE
-                    )
-                    """);
-            st.execute("""
-                    CREATE TABLE IF NOT EXISTS views (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        linkId INTEGER NOT NULL,
-                        viewerLabel TEXT NOT NULL,
-                        viewedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                        FOREIGN KEY(linkId) REFERENCES share_links(idLink) ON DELETE CASCADE
+                        FOREIGN KEY(linkId) REFERENCES LinkCondivisione(idLink) ON DELETE CASCADE,
+                        FOREIGN KEY(contentId) REFERENCES ContenutoMultimediale(idContenuto) ON DELETE CASCADE
                     )
                     """);
         }
@@ -118,7 +109,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
 
     @Override
     public boolean emailEsiste(String email) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT 1 FROM accounts WHERE email=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT 1 FROM AccountStudente WHERE email=?")) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
@@ -131,7 +122,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
         String salt = SecurityUtil.newSalt();
         String hash = SecurityUtil.hashPassword(password, salt);
         try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(
-                "INSERT INTO accounts(email,pwd,salt) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+                "INSERT INTO AccountStudente(email,pwd,salt) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, email);
             ps.setString(2, hash);
             ps.setString(3, salt);
@@ -144,7 +135,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
 
     @Override
     public Optional<AccountStudente> cercaAccountPerEmail(String email) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT idAccount,email FROM accounts WHERE email=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT idAccount,email FROM AccountStudente WHERE email=?")) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return Optional.of(new AccountStudente(rs.getInt("idAccount"), rs.getString("email")));
@@ -160,7 +151,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
         String salt = SecurityUtil.newSalt();
         String randomPasswordHash = SecurityUtil.hashPassword(UUID.randomUUID().toString(), salt);
         try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(
-                "INSERT INTO accounts(email,pwd,salt) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+                "INSERT INTO AccountStudente(email,pwd,salt) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, email);
             ps.setString(2, randomPasswordHash);
             ps.setString(3, salt);
@@ -176,7 +167,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
     @Override
     public Optional<AccountStudente> autentica(String email, String password) throws SQLException {
         try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(
-                "SELECT idAccount,email,pwd,salt FROM accounts WHERE email=?")) {
+                "SELECT idAccount,email,pwd,salt FROM AccountStudente WHERE email=?")) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) return Optional.empty();
@@ -192,7 +183,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
     @Override
     public boolean verificaPassword(int idAccount, String password) throws SQLException {
         try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(
-                "SELECT pwd,salt FROM accounts WHERE idAccount=?")) {
+                "SELECT pwd,salt FROM AccountStudente WHERE idAccount=?")) {
             ps.setInt(1, idAccount);
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) return false;
@@ -207,7 +198,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
         String salt = SecurityUtil.newSalt();
         String hash = SecurityUtil.hashPassword(nuovaPassword, salt);
         try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(
-                "UPDATE accounts SET pwd=?, salt=? WHERE idAccount=?")) {
+                "UPDATE AccountStudente SET pwd=?, salt=? WHERE idAccount=?")) {
             ps.setString(1, hash);
             ps.setString(2, salt);
             ps.setInt(3, idAccount);
@@ -217,7 +208,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
 
     @Override
     public void aggiornaStatoLogin(int idAccount, boolean logged) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("UPDATE accounts SET isLogged=? WHERE idAccount=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("UPDATE AccountStudente SET isLogged=? WHERE idAccount=?")) {
             ps.setInt(1, logged ? 1 : 0);
             ps.setInt(2, idAccount);
             ps.executeUpdate();
@@ -226,7 +217,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
 
     @Override
     public void salvaTokenRipristino(int idAccount, String token) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("UPDATE accounts SET recoveryToken=? WHERE idAccount=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("UPDATE AccountStudente SET recoveryToken=? WHERE idAccount=?")) {
             ps.setString(1, token);
             ps.setInt(2, idAccount);
             ps.executeUpdate();
@@ -235,7 +226,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
 
     @Override
     public boolean verificaTokenRipristino(int idAccount, String token) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT recoveryToken FROM accounts WHERE idAccount=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT recoveryToken FROM AccountStudente WHERE idAccount=?")) {
             ps.setInt(1, idAccount);
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next() && token != null && token.equals(rs.getString("recoveryToken"));
@@ -245,7 +236,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
 
     @Override
     public void cancellaTokenRipristino(int idAccount) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("UPDATE accounts SET recoveryToken=NULL WHERE idAccount=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("UPDATE AccountStudente SET recoveryToken=NULL WHERE idAccount=?")) {
             ps.setInt(1, idAccount);
             ps.executeUpdate();
         }
@@ -254,7 +245,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
     @Override
     public DatiCurriculari recuperaDatiCurriculari(int idAccount) throws SQLException {
         try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(
-                "SELECT biografia,titoliDiStudio,esperienzeArtistiche FROM curriculum WHERE idAccount=?")) {
+                "SELECT biografia,titoliDiStudio,esperienze FROM DatiCurriculari WHERE idAccount=?")) {
             ps.setInt(1, idAccount);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return new DatiCurriculari(rs.getString(1), rs.getString(2), rs.getString(3));
@@ -266,12 +257,12 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
     @Override
     public void salvaDatiCurriculari(int idAccount, String biografia, String titoliDiStudio, String esperienzeArtisticheEFormative) throws SQLException {
         try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("""
-                INSERT INTO curriculum(idAccount,biografia,titoliDiStudio,esperienzeArtistiche,updatedAt)
+                INSERT INTO DatiCurriculari(idAccount,biografia,titoliDiStudio,esperienze,updatedAt)
                 VALUES(?,?,?,?,CURRENT_TIMESTAMP)
                 ON CONFLICT(idAccount) DO UPDATE SET
                     biografia=excluded.biografia,
                     titoliDiStudio=excluded.titoliDiStudio,
-                    esperienzeArtistiche=excluded.esperienzeArtistiche,
+                    esperienze=excluded.esperienze,
                     updatedAt=CURRENT_TIMESTAMP
                 """)) {
             ps.setInt(1, idAccount);
@@ -286,7 +277,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
     public void salvaContenuto(int idAccount, String titolo, String formato, long dimensione, Path percorsoFile) throws SQLException {
         int pos = nextPosition(idAccount);
         try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("""
-                INSERT INTO contents(idAccount,titolo,formato,dimensione,filePath,posizione)
+                INSERT INTO ContenutoMultimediale(idAccount,titolo,formato,dimensione,filePath,posizione)
                 VALUES(?,?,?,?,?,?)
                 """)) {
             ps.setInt(1, idAccount);
@@ -300,7 +291,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
     }
 
     private int nextPosition(int idAccount) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT COALESCE(MAX(posizione),0)+1 FROM contents WHERE idAccount=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT COALESCE(MAX(posizione),0)+1 FROM ContenutoMultimediale WHERE idAccount=?")) {
             ps.setInt(1, idAccount);
             try (ResultSet rs = ps.executeQuery()) { return rs.next() ? rs.getInt(1) : 1; }
         }
@@ -309,7 +300,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
     @Override
     public List<ContenutoMultimediale> recuperaContenuti(int idAccount) throws SQLException {
         try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(
-                "SELECT * FROM contents WHERE idAccount=? ORDER BY posizione ASC, idContenuto ASC")) {
+                "SELECT * FROM ContenutoMultimediale WHERE idAccount=? ORDER BY posizione ASC, idContenuto ASC")) {
             ps.setInt(1, idAccount);
             try (ResultSet rs = ps.executeQuery()) {
                 List<ContenutoMultimediale> out = new ArrayList<>();
@@ -322,8 +313,8 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
     @Override
     public List<ContenutoMultimediale> recuperaContenutiPerLink(int linkId) throws SQLException {
         try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("""
-                SELECT c.* FROM contents c
-                JOIN share_link_contents slc ON slc.contentId=c.idContenuto
+                SELECT c.* FROM ContenutoMultimediale c
+                JOIN ContenutiVisibili slc ON slc.contentId=c.idContenuto
                 WHERE slc.linkId=?
                 ORDER BY c.posizione ASC, c.idContenuto ASC
                 """)) {
@@ -344,13 +335,13 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
     @Override
     public void eliminaContenuto(int contenutoId) throws SQLException, IOException {
         Path filePath = null;
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT filePath FROM contents WHERE idContenuto=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT filePath FROM ContenutoMultimediale WHERE idContenuto=?")) {
             ps.setInt(1, contenutoId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) filePath = Paths.get(rs.getString(1));
             }
         }
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("DELETE FROM contents WHERE idContenuto=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("DELETE FROM ContenutoMultimediale WHERE idContenuto=?")) {
             ps.setInt(1, contenutoId);
             ps.executeUpdate();
         }
@@ -359,7 +350,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
 
     @Override
     public void salvaOrdineContenuti(List<ContenutoMultimediale> contenuti) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("UPDATE contents SET posizione=? WHERE idContenuto=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("UPDATE ContenutoMultimediale SET posizione=? WHERE idContenuto=?")) {
             int pos = 1;
             for (ContenutoMultimediale item : contenuti) {
                 ps.setInt(1, pos++);
@@ -376,7 +367,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
         try (Connection c = connect()) {
             c.setAutoCommit(false);
             try (PreparedStatement ps = c.prepareStatement("""
-                    INSERT INTO share_links(idStudente,url,descrizione,dataDiScadenza,numeroVisualizzazioni)
+                    INSERT INTO LinkCondivisione(idStudente,url,descrizione,dataDiScadenza,numeroVisualizzazioni)
                     VALUES(?,?,?,?,0)
                     """, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, idAccount);
@@ -389,7 +380,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
                     if (!keys.next()) throw new SQLException("Impossibile generare il link.");
                     linkId = keys.getInt(1);
                 }
-                try (PreparedStatement ps2 = c.prepareStatement("INSERT INTO share_link_contents(linkId,contentId) VALUES(?,?)")) {
+                try (PreparedStatement ps2 = c.prepareStatement("INSERT INTO ContenutiVisibili(linkId,contentId) VALUES(?,?)")) {
                     for (int id : contenutiIds) {
                         ps2.setInt(1, linkId);
                         ps2.setInt(2, id);
@@ -411,7 +402,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
     @Override
     public List<LinkDiCondivisione> recuperaLinkDiCondivisione(int idAccount) throws SQLException {
         try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(
-                "SELECT * FROM share_links WHERE idStudente=? ORDER BY createdAt DESC")) {
+                "SELECT * FROM LinkCondivisione WHERE idStudente=? ORDER BY createdAt DESC")) {
             ps.setInt(1, idAccount);
             try (ResultSet rs = ps.executeQuery()) {
                 List<LinkDiCondivisione> out = new ArrayList<>();
@@ -423,7 +414,7 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
 
     @Override
     public Optional<LinkDiCondivisione> recuperaLinkValido(String url) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT * FROM share_links WHERE url=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("SELECT * FROM LinkCondivisione WHERE url=?")) {
             ps.setString(1, url);
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) return Optional.empty();
@@ -443,32 +434,16 @@ public class SQLiteBoundaryDBMS implements BoundaryDBMS {
 
     @Override
     public void registraVisualizzazione(int linkId, String etichettaVisualizzatore) throws SQLException {
-        
-        try (Connection c = connect()) {
-            c.setAutoCommit(false);
-            try {
-                try (PreparedStatement ps = c.prepareStatement("INSERT INTO views(linkId,viewerLabel) VALUES(?,?)")) {
-                    ps.setInt(1, linkId);
-                    ps.setString(2, etichettaVisualizzatore);
-                    ps.executeUpdate();
-                }
-                try (PreparedStatement ps = c.prepareStatement("UPDATE share_links SET numeroVisualizzazioni=numeroVisualizzazioni+1 WHERE idLink=?")) {
-                    ps.setInt(1, linkId);
-                    ps.executeUpdate();
-                }
-                c.commit();
-            } catch (Exception ex) {
-                c.rollback();
-                throw ex;
-            } finally {
-                c.setAutoCommit(true);
-            }
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement(
+                "UPDATE LinkCondivisione SET numeroVisualizzazioni=numeroVisualizzazioni+1 WHERE idLink=?")) {
+            ps.setInt(1, linkId);
+            ps.executeUpdate();
         }
     }
 
     @Override
     public void disattivaLink(int linkId) throws SQLException {
-        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("DELETE FROM share_links WHERE idLink=?")) {
+        try (Connection c = connect(); PreparedStatement ps = c.prepareStatement("DELETE FROM LinkCondivisione WHERE idLink=?")) {
             ps.setInt(1, linkId);
             ps.executeUpdate();
         }
