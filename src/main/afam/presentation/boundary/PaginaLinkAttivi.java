@@ -21,7 +21,7 @@ public class PaginaLinkAttivi {
 
     public Parent mostra(ObservableList<LinkDiCondivisione> links) {
         this.listaLinkAttivi = ui.listaLink(links);
-        this.pulsanteElimina = ui.button("Elimina", "danger");
+        this.pulsanteElimina = ui.button("Disattiva", "danger");
         this.root = ui.page("Link attivi", tornaAllaGestioneCondivisione, listaLinkAttivi, pulsanteElimina);
         return root;
     }

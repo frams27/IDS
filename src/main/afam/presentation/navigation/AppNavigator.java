@@ -378,9 +378,15 @@ public class AppNavigator {
                     PannelloContenutiEliminabili page = new PannelloContenutiEliminabili(ui);
                     Parent root = page.mostra(items);
                     page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
-                        eliminaContenutiControl.eliminaContenuti(new ArrayList<>(page.listaContenutiEliminabili().getSelectionModel().getSelectedItems()));
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Eliminazione avvenuta con successo!",
-                                (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
+                        List<ContenutoMultimediale> selezionati = new ArrayList<>(page.listaContenutiEliminabili().getSelectionModel().getSelectedItems());
+                        if (selezionati.isEmpty()) {
+                            mostra(Vista.PANNELLO_DI_NOTIFICA, "Selezionare almeno un contenuto per procedere",
+                                    (Runnable) () -> mostra(Vista.CONTENUTI_ELIMINABILI));
+                        } else {
+                            eliminaContenutiControl.eliminaContenuti(selezionati);
+                            mostra(Vista.PANNELLO_DI_NOTIFICA, "Eliminazione avvenuta con successo!",
+                                    (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
+                        }
                     }));
                     page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.GESTIONE_PROFILO));
                     setPopup(root);
@@ -433,12 +439,18 @@ public class AppNavigator {
                 setScreen(page.mostra(), "Modifica password");
             }
             case GESTIONE_CONDIVISIONE -> {
-                requireStudent();
-                SchermataGestioneCondivisione page = new SchermataGestioneCondivisione(ui, () -> mostra(Vista.HOME));
-                page.pulsanteGeneraLink().setOnAction(e -> mostra(Vista.CONTENUTI_VISUALIZZABILI));
-                page.pulsanteFeedbackContenuti().setOnAction(e -> mostra(Vista.FEEDBACK_CONTENUTI));
-                page.pulsanteDisattivaLink().setOnAction(e -> mostra(Vista.LISTA_LINK_ATTIVI));
-                setScreen(page.mostra(), "Gestione condivisione");
+                try {
+                    AccountStudente account = requireStudent();
+                    SchermataGestioneCondivisione page = new SchermataGestioneCondivisione(ui, () -> mostra(Vista.HOME));
+                    List<LinkDiCondivisione> links = feedbackContenutiControl.recuperaLink(account);
+                    page.pulsanteGeneraLink().setOnAction(e -> mostra(Vista.CONTENUTI_VISUALIZZABILI));
+                    page.pulsanteFeedbackContenuti().setDisable(links.isEmpty());
+                    page.pulsanteFeedbackContenuti().setOnAction(e -> mostra(Vista.FEEDBACK_CONTENUTI));
+                    page.pulsanteDisattivaLink().setOnAction(e -> mostra(Vista.LISTA_LINK_ATTIVI));
+                    setScreen(page.mostra(), "Gestione condivisione");
+                } catch (Exception ex) {
+                    handleError(ex);
+                }
             }
             case CONTENUTI_VISUALIZZABILI -> {
                 PaginaContenutiVisualizzabili page = new PaginaContenutiVisualizzabili(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
@@ -493,7 +505,8 @@ public class AppNavigator {
             case FEEDBACK_CONTENUTI -> {
                 try {
                     ObservableList<LinkDiCondivisione> links = FXCollections.observableArrayList(feedbackContenutiControl.recuperaLink(requireStudent()));
-                    if (links.isEmpty()) {
+                    int visualizzazioniTotali = links.stream().mapToInt(LinkDiCondivisione::numeroVisualizzazioni).sum();
+                    if (visualizzazioniTotali == 0) {
                         mostra(Vista.PANNELLO_DI_NOTIFICA, "I tuoi contenuti non sono ancora stati visualizzati.",
                                 (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                         return;
@@ -509,7 +522,7 @@ public class AppNavigator {
                 try {
                     ObservableList<LinkDiCondivisione> links = FXCollections.observableArrayList(disattivaLinkControl.recuperaLink(requireStudent()));
                     if (links.isEmpty()) {
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Nessun link presente.",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Nessun link attivo presente.",
                                 (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                         return;
                     }
@@ -517,7 +530,7 @@ public class AppNavigator {
                     Parent root = page.mostra(links);
                     page.pulsanteElimina().setOnAction(e -> runUserAction(() -> {
                         disattivaLinkControl.disattivaLink(page.listaLinkAttivi().getSelectionModel().getSelectedItem());
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Link eliminato con successo.",
+                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Link disattivato con successo.",
                                 (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
                     }));
                     setScreen(root, "Link attivi");

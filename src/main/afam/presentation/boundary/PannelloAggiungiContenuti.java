@@ -26,10 +26,12 @@ public class PannelloAggiungiContenuti {
         this.pulsanteAggiungiFoto = ui.button("Aggiungi Foto", "primary");
         this.pulsanteAggiungiVideo = ui.button("Aggiungi Video", "primary");
         this.pulsanteAnnulla = ui.button("Annulla", "secondary");
+        HBox boxAnnulla = new HBox(10, pulsanteAnnulla);
+        boxAnnulla.setAlignment(javafx.geometry.Pos.CENTER);
         VBox panel = new VBox(14, titolo, descrizione,
                 pulsanteAggiungiDocumento, pulsanteAggiungiAudio,
                 pulsanteAggiungiFoto, pulsanteAggiungiVideo,
-                new HBox(10, pulsanteAnnulla));
+                boxAnnulla);
         panel.getStyleClass().add("popup-card");
         this.root = panel;
     }
