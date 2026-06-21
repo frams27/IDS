@@ -12,14 +12,14 @@ public class RegistrazioneControl {
 
     public void registra(String email, String password, String confermaPassword) throws Exception {
         
-        String normalizedEmail = ValidazioneControlSupport.normalizzaEmail(email);
-        ValidazioneControlSupport.richiediEmailValida(normalizedEmail);
-        ValidazioneControlSupport.richiediTesto(password, "Inserisci la password.");
-        ValidazioneControlSupport.richiediTesto(confermaPassword, "Inserisci la conferma password.");
+        String normalizedEmail = ValidazioneSupportControl.normalizzaEmail(email);
+        ValidazioneSupportControl.richiediEmailValida(normalizedEmail);
+        ValidazioneSupportControl.richiediTesto(password, "Inserisci la password.");
+        ValidazioneSupportControl.richiediTesto(confermaPassword, "Inserisci la conferma password.");
         if (!password.equals(confermaPassword)) {
             throw new ApplicationException("Le due password non corrispondono.");
         }
-        ValidazioneControlSupport.richiediPasswordSicura(password);
+        ValidazioneSupportControl.richiediPasswordSicura(password);
         if (boundaryDBMS.emailEsiste(normalizedEmail)) {
             throw new ApplicationException("L'email inserita è già associata a un utente!");
         }

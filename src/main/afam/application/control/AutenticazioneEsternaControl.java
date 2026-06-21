@@ -18,8 +18,8 @@ public class AutenticazioneEsternaControl {
     }
 
     public AccountStudente autenticaConProviderEsterno(String email) throws Exception {
-        String normalizedEmail = ValidazioneControlSupport.normalizzaEmail(email);
-        ValidazioneControlSupport.richiediEmailValida(normalizedEmail);
+        String normalizedEmail = ValidazioneSupportControl.normalizzaEmail(email);
+        ValidazioneSupportControl.richiediEmailValida(normalizedEmail);
         if (!boundaryProviderEsterno.autenticaStudente(normalizedEmail)) {
             throw new ApplicationException("Autenticazione tramite provider esterno fallita o annullata.");
         }

@@ -20,7 +20,7 @@ public class CreazioneLinkControl {
         if (contenutiSelezionati == null || contenutiSelezionati.isEmpty()) {
             throw new ApplicationException("Seleziona almeno un contenuto visualizzabile.");
         }
-        ValidazioneControlSupport.verificaLimiteTesto(descrizione, "Descrizione");
+        ValidazioneSupportControl.verificaLimiteTesto(descrizione, "Descrizione");
         if (dataDiScadenza != null && dataDiScadenza.isBefore(LocalDate.now())) {
             throw new ApplicationException("La data di scadenza non può essere precedente alla data odierna.");
         }

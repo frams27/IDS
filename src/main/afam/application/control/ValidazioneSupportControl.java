@@ -5,8 +5,8 @@ import afam.util.SecurityUtil;
 
 import java.util.Locale;
 
-final class ValidazioneControlSupport {
-    private ValidazioneControlSupport() {}
+final class ValidazioneSupportControl {
+    private ValidazioneSupportControl() {}
 
     static String normalizzaEmail(String email) {
         return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);

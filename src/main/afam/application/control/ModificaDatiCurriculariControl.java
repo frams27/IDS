@@ -16,9 +16,9 @@ public class ModificaDatiCurriculariControl {
     }
 
     public void salvaDatiCurriculari(AccountStudente account, String biografia, String titoliDiStudio, String esperienzeArtisticheEFormative) throws Exception {
-        ValidazioneControlSupport.verificaLimiteTesto(biografia, "Biografia");
-        ValidazioneControlSupport.verificaLimiteTesto(titoliDiStudio, "Titoli di studio");
-        ValidazioneControlSupport.verificaLimiteTesto(esperienzeArtisticheEFormative, "Esperienze artistiche e formative");
+        ValidazioneSupportControl.verificaLimiteTesto(biografia, "Biografia");
+        ValidazioneSupportControl.verificaLimiteTesto(titoliDiStudio, "Titoli di studio");
+        ValidazioneSupportControl.verificaLimiteTesto(esperienzeArtisticheEFormative, "Esperienze artistiche e formative");
         boundaryDBMS.salvaDatiCurriculari(account.idAccount(), biografia, titoliDiStudio, esperienzeArtisticheEFormative);
     }
 }

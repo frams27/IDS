@@ -17,9 +17,9 @@ public class AutenticazioneCredenzialiControl {
     }
 
     public AccountStudente autentica(String email, String password) throws Exception {
-        String normalizedEmail = ValidazioneControlSupport.normalizzaEmail(email);
-        ValidazioneControlSupport.richiediEmailValida(normalizedEmail);
-        ValidazioneControlSupport.richiediTesto(password, "Inserisci la password.");
+        String normalizedEmail = ValidazioneSupportControl.normalizzaEmail(email);
+        ValidazioneSupportControl.richiediEmailValida(normalizedEmail);
+        ValidazioneSupportControl.richiediTesto(password, "Inserisci la password.");
         Optional<AccountStudente> account = boundaryDBMS.autentica(normalizedEmail, password);
         if (account.isEmpty()) {
             throw new ApplicationException("Email o password errate!");

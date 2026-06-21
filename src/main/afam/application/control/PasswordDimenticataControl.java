@@ -16,8 +16,8 @@ public class PasswordDimenticataControl {
     }
 
     public AccountStudente richiediRecuperoPassword(String email) throws Exception {
-        String normalizedEmail = ValidazioneControlSupport.normalizzaEmail(email);
-        ValidazioneControlSupport.richiediEmailValida(normalizedEmail);
+        String normalizedEmail = ValidazioneSupportControl.normalizzaEmail(email);
+        ValidazioneSupportControl.richiediEmailValida(normalizedEmail);
         Optional<AccountStudente> account = boundaryDBMS.cercaAccountPerEmail(normalizedEmail);
         if (account.isEmpty()) {
             throw new ApplicationException("ATTENZIONE: l'email inserita non è valida.");
@@ -32,15 +32,15 @@ public class PasswordDimenticataControl {
     }
 
     public void impostaNuovaPassword(AccountStudente account, String token, String nuovaPassword, String confermaNuovaPassword) throws Exception {
-        ValidazioneControlSupport.richiediTesto(nuovaPassword, "Inserisci la nuova password.");
-        ValidazioneControlSupport.richiediTesto(confermaNuovaPassword, "Inserisci la conferma della nuova password.");
+        ValidazioneSupportControl.richiediTesto(nuovaPassword, "Inserisci la nuova password.");
+        ValidazioneSupportControl.richiediTesto(confermaNuovaPassword, "Inserisci la conferma della nuova password.");
         if (!boundaryDBMS.verificaTokenRipristino(account.idAccount(), token)) {
             throw new ApplicationException("Link di ripristino non valido.");
         }
         if (!nuovaPassword.equals(confermaNuovaPassword)) {
             throw new ApplicationException("ATTENZIONE: le due password non corrispondono!");
         }
-        ValidazioneControlSupport.richiediPasswordSicura(nuovaPassword);
+        ValidazioneSupportControl.richiediPasswordSicura(nuovaPassword);
         boundaryDBMS.aggiornaPassword(account.idAccount(), nuovaPassword);
         boundaryDBMS.cancellaTokenRipristino(account.idAccount());
     }
