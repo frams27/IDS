@@ -1,6 +1,6 @@
 package afam.application.control;
 
-import afam.application.dto.ApplicationException;
+import afam.application.dto.SystemException;
 import afam.application.session.SessioneCorrente;
 import afam.domain.entity.AccountStudente;
 import afam.domain.repository.BoundaryDBMS;
@@ -22,7 +22,7 @@ public class AutenticazioneCredenzialiControl {
         ValidazioneSupportControl.richiediTesto(password, "Inserisci la password.");
         Optional<AccountStudente> account = boundaryDBMS.autentica(normalizedEmail, password);
         if (account.isEmpty()) {
-            throw new ApplicationException("Email o password errate!");
+            throw new SystemException("Email o password errate!");
         }
         sessioneCorrente.avviaSessione(account.get());
         return account.get();

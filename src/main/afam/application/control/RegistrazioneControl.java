@@ -1,6 +1,6 @@
 package afam.application.control;
 
-import afam.application.dto.ApplicationException;
+import afam.application.dto.SystemException;
 import afam.domain.repository.BoundaryDBMS;
 
 public class RegistrazioneControl {
@@ -17,11 +17,11 @@ public class RegistrazioneControl {
         ValidazioneSupportControl.richiediTesto(password, "Inserisci la password.");
         ValidazioneSupportControl.richiediTesto(confermaPassword, "Inserisci la conferma password.");
         if (!password.equals(confermaPassword)) {
-            throw new ApplicationException("Le due password non corrispondono.");
+            throw new SystemException("Le due password non corrispondono.");
         }
         ValidazioneSupportControl.richiediPasswordSicura(password);
         if (boundaryDBMS.emailEsiste(normalizedEmail)) {
-            throw new ApplicationException("L'email inserita è già associata a un utente!");
+            throw new SystemException("L'email inserita è già associata a un utente!");
         }
         boundaryDBMS.salvaNuovoAccount(normalizedEmail, password);
         

@@ -1,6 +1,6 @@
 package afam.application.control;
 
-import afam.application.dto.ApplicationException;
+import afam.application.dto.SystemException;
 import afam.domain.entity.AccountStudente;
 import afam.domain.entity.ContenutoMultimediale;
 import afam.domain.repository.BoundaryDBMS;
@@ -31,12 +31,12 @@ public class AggiungiContenutiControl {
     }
 
     public void aggiungiContenuto(AccountStudente account, Path fileSelezionato) throws Exception {
-        if (fileSelezionato == null) throw new ApplicationException("Nessun file selezionato.");
+        if (fileSelezionato == null) throw new SystemException("Nessun file selezionato.");
         long dimensione = Files.size(fileSelezionato);
-        if (dimensione > MAX_FILE_SIZE_BYTES) throw new ApplicationException("ERRORE: la dimensione massima consentita è 512 MB");
+        if (dimensione > MAX_FILE_SIZE_BYTES) throw new SystemException("ERRORE: la dimensione massima consentita è 512 MB");
         String formato = FileUtil.extension(fileSelezionato.getFileName().toString());
         if (!FORMATI_CONSENTITI.contains(formato.toLowerCase()))
-            throw new ApplicationException("Formato file non supportato: " + formato);
+            throw new SystemException("Formato file non supportato: " + formato);
         Files.createDirectories(boundaryDBMS.cartellaUpload());
         String safeName = System.currentTimeMillis() + "_" + fileSelezionato.getFileName().toString().replaceAll("[^A-Za-z0-9._-]", "_");
         Path destinazione = boundaryDBMS.cartellaUpload().resolve(safeName);

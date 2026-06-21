@@ -1,7 +1,7 @@
 package afam.presentation.navigation;
 
 import afam.application.control.*;
-import afam.application.dto.ApplicationException;
+import afam.application.dto.SystemException;
 import afam.application.dto.PortfolioCondiviso;
 import afam.application.session.SessioneCorrente;
 import afam.domain.entity.AccountStudente;
@@ -619,7 +619,7 @@ public class AppNavigator {
     }
 
     private void handleError(Exception ex, Runnable azioneDopoOk) {
-        if (ex instanceof ApplicationException) {
+        if (ex instanceof SystemException) {
             navigaVerso(Vista.PANNELLO_DI_NOTIFICA, ex.getMessage(), azioneDopoOk);
         } else {
             navigaVerso(Vista.PANNELLO_DI_NOTIFICA, ex.getMessage() == null ? ex.toString() : ex.getMessage(), azioneDopoOk);

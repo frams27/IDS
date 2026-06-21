@@ -1,6 +1,6 @@
 package afam.application.control;
 
-import afam.application.dto.ApplicationException;
+import afam.application.dto.SystemException;
 import afam.domain.entity.AccountStudente;
 import afam.domain.entity.ContenutoMultimediale;
 import afam.domain.repository.BoundaryDBMS;
@@ -18,9 +18,9 @@ public class ContenutiVisualizzabiliControl {
         return boundaryDBMS.recuperaContenuti(account.idAccount());
     }
 
-    public void verificaSelezione(List<ContenutoMultimediale> selezionati) throws ApplicationException {
+    public void verificaSelezione(List<ContenutoMultimediale> selezionati) throws SystemException {
         if (selezionati == null || selezionati.isEmpty()) {
-            throw new ApplicationException("Selezionare almeno un contenuto per procedere");
+            throw new SystemException("Selezionare almeno un contenuto per procedere");
         }
     }
 }

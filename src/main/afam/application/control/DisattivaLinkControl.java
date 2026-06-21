@@ -1,6 +1,6 @@
 package afam.application.control;
 
-import afam.application.dto.ApplicationException;
+import afam.application.dto.SystemException;
 import afam.domain.entity.AccountStudente;
 import afam.domain.entity.LinkDiCondivisione;
 import afam.domain.repository.BoundaryDBMS;
@@ -19,7 +19,7 @@ public class DisattivaLinkControl {
     }
 
     public void disattivaLink(LinkDiCondivisione link) throws Exception {
-        if (link == null) throw new ApplicationException("Seleziona il link da eliminare.");
+        if (link == null) throw new SystemException("Seleziona il link da eliminare.");
         boundaryDBMS.disattivaLink(link.idLink());
     }
 }

@@ -1,6 +1,6 @@
 package afam.application.control;
 
-import afam.application.dto.ApplicationException;
+import afam.application.dto.SystemException;
 import afam.application.session.SessioneCorrente;
 import afam.domain.entity.AccountStudente;
 import afam.domain.repository.BoundaryDBMS;
@@ -21,7 +21,7 @@ public class AutenticazioneEsternaControl {
         String normalizedEmail = ValidazioneSupportControl.normalizzaEmail(email);
         ValidazioneSupportControl.richiediEmailValida(normalizedEmail);
         if (!boundaryProviderEsterno.autenticaStudente(normalizedEmail)) {
-            throw new ApplicationException("Autenticazione tramite provider esterno fallita o annullata.");
+            throw new SystemException("Autenticazione tramite provider esterno fallita o annullata.");
         }
         AccountStudente account = boundaryDBMS.recuperaOCreaAccountProvider(normalizedEmail);
         boundaryDBMS.aggiornaStatoLogin(account.idAccount(), true);

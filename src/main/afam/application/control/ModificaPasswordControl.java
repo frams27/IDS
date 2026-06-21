@@ -1,6 +1,6 @@
 package afam.application.control;
 
-import afam.application.dto.ApplicationException;
+import afam.application.dto.SystemException;
 import afam.application.session.SessioneCorrente;
 import afam.domain.entity.AccountStudente;
 import afam.domain.repository.BoundaryDBMS;
@@ -20,13 +20,13 @@ public class ModificaPasswordControl {
         ValidazioneSupportControl.richiediTesto(nuovaPassword, "Inserisci la nuova password.");
         ValidazioneSupportControl.richiediTesto(confermaNuovaPassword, "Inserisci la conferma della nuova password.");
         if (!boundaryDBMS.verificaPassword(account.idAccount(), vecchiaPassword)) {
-            throw new ApplicationException("Password attuale errata");
+            throw new SystemException("Password attuale errata");
         }
         if (!nuovaPassword.equals(confermaNuovaPassword)) {
-            throw new ApplicationException("Le nuove password non corrispondono");
+            throw new SystemException("Le nuove password non corrispondono");
         }
         if (vecchiaPassword.equals(nuovaPassword)) {
-            throw new ApplicationException("La nuova password non può essere uguale a quella attuale");
+            throw new SystemException("La nuova password non può essere uguale a quella attuale");
         }
         ValidazioneSupportControl.richiediPasswordSicura(nuovaPassword);
         boundaryDBMS.aggiornaPassword(account.idAccount(), nuovaPassword);

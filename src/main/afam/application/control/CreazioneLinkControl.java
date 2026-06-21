@@ -1,6 +1,6 @@
 package afam.application.control;
 
-import afam.application.dto.ApplicationException;
+import afam.application.dto.SystemException;
 import afam.domain.entity.AccountStudente;
 import afam.domain.entity.ContenutoMultimediale;
 import afam.domain.entity.LinkDiCondivisione;
@@ -18,11 +18,11 @@ public class CreazioneLinkControl {
 
     public LinkDiCondivisione generaLink(AccountStudente account, List<ContenutoMultimediale> contenutiSelezionati, String descrizione, LocalDate dataDiScadenza) throws Exception {
         if (contenutiSelezionati == null || contenutiSelezionati.isEmpty()) {
-            throw new ApplicationException("Seleziona almeno un contenuto visualizzabile.");
+            throw new SystemException("Seleziona almeno un contenuto visualizzabile.");
         }
         ValidazioneSupportControl.verificaLimiteTesto(descrizione, "Descrizione");
         if (dataDiScadenza != null && dataDiScadenza.isBefore(LocalDate.now())) {
-            throw new ApplicationException("La data di scadenza non può essere precedente alla data odierna.");
+            throw new SystemException("La data di scadenza non può essere precedente alla data odierna.");
         }
         List<Integer> ids = contenutiSelezionati.stream().map(ContenutoMultimediale::idContenuto).toList();
         return boundaryDBMS.salvaLinkDiCondivisione(account.idAccount(), ids, descrizione, dataDiScadenza);

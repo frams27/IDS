@@ -1,6 +1,6 @@
 package afam.application.control;
 
-import afam.application.dto.ApplicationException;
+import afam.application.dto.SystemException;
 import afam.application.session.SessioneCorrente;
 import afam.domain.entity.AccountStudente;
 import afam.domain.repository.BoundaryDBMS;
@@ -34,7 +34,7 @@ public class DueFAControl {
         AccountStudente account = sessioneCorrente.richiediAccountStudente();
         ValidazioneSupportControl.richiediTesto(codice, "Inserisci il codice OTP.");
         if (otpSession == null || otpSession.idAccount() != account.idAccount()) {
-            throw new ApplicationException("Clicca sul pulsante Genera OTP per generare il codice");
+            throw new SystemException("Clicca sul pulsante Genera OTP per generare il codice");
         }
         otpSession = otpSession.incrementaTentativi();
         if (otpSession.codice().equals(codice.trim())) {
@@ -45,8 +45,8 @@ public class DueFAControl {
         if (otpSession.tentativi() >= MAX_TENTATIVI) {
             otpSession = null;
             sessioneCorrente.terminaSessione();
-            throw new ApplicationException("Numero massimo di tentativi raggiunto. Sessione annullata.");
+            throw new SystemException("Numero massimo di tentativi raggiunto. Sessione annullata.");
         }
-        throw new ApplicationException("Codice errato");
+        throw new SystemException("Codice errato");
     }
 }

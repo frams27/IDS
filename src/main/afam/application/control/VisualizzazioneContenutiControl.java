@@ -1,6 +1,6 @@
 package afam.application.control;
 
-import afam.application.dto.ApplicationException;
+import afam.application.dto.SystemException;
 import afam.application.dto.PortfolioCondiviso;
 import afam.domain.entity.LinkDiCondivisione;
 import afam.domain.repository.BoundaryDBMS;
@@ -16,11 +16,11 @@ public class VisualizzazioneContenutiControl {
 
     public LinkDiCondivisione validaLink(String url) throws Exception {
         if (url == null || url.trim().isEmpty()) {
-            throw new ApplicationException("Inserisci il link ricevuto.");
+            throw new SystemException("Inserisci il link ricevuto.");
         }
         Optional<LinkDiCondivisione> link = boundaryDBMS.recuperaLinkValido(url.trim());
         if (link.isEmpty()) {
-            throw new ApplicationException("Link Inesistente.");
+            throw new SystemException("Link Inesistente.");
         }
         boundaryDBMS.registraVisualizzazione(link.get().idLink(), "Soggetto esterno");
         return link.get();

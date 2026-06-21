@@ -1,6 +1,6 @@
 package afam.application.control;
 
-import afam.application.dto.ApplicationException;
+import afam.application.dto.SystemException;
 import afam.domain.entity.AccountStudente;
 import afam.domain.repository.BoundaryDBMS;
 
@@ -20,7 +20,7 @@ public class PasswordDimenticataControl {
         ValidazioneSupportControl.richiediEmailValida(normalizedEmail);
         Optional<AccountStudente> account = boundaryDBMS.cercaAccountPerEmail(normalizedEmail);
         if (account.isEmpty()) {
-            throw new ApplicationException("ATTENZIONE: l'email inserita non è valida.");
+            throw new SystemException("ATTENZIONE: l'email inserita non è valida.");
         }
         return account.get();
     }
@@ -35,10 +35,10 @@ public class PasswordDimenticataControl {
         ValidazioneSupportControl.richiediTesto(nuovaPassword, "Inserisci la nuova password.");
         ValidazioneSupportControl.richiediTesto(confermaNuovaPassword, "Inserisci la conferma della nuova password.");
         if (!boundaryDBMS.verificaTokenRipristino(account.idAccount(), token)) {
-            throw new ApplicationException("Link di ripristino non valido.");
+            throw new SystemException("Link di ripristino non valido.");
         }
         if (!nuovaPassword.equals(confermaNuovaPassword)) {
-            throw new ApplicationException("ATTENZIONE: le due password non corrispondono!");
+            throw new SystemException("ATTENZIONE: le due password non corrispondono!");
         }
         ValidazioneSupportControl.richiediPasswordSicura(nuovaPassword);
         boundaryDBMS.aggiornaPassword(account.idAccount(), nuovaPassword);
