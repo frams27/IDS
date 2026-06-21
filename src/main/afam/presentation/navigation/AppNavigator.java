@@ -114,13 +114,13 @@ public class AppNavigator {
         this.ui.setSimulaPerditaConnessioneAction(() -> {
             Runnable schermataDaRipristinare = ripristinaSchermataCorrente;
             if (schermataDaRipristinare != null) {
-                mostra(Vista.ERRORE_CONNESSIONE, schermataDaRipristinare);
+                navigaVerso(Vista.ERRORE_CONNESSIONE, schermataDaRipristinare);
             }
         });
         try {
             boundaryDBMS.inizializza();
         } catch (Exception e) {
-            mostra(Vista.PANNELLO_DI_NOTIFICA, "Impossibile inizializzare il DBMS: " + e.getMessage(), null);
+            navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Impossibile inizializzare il DBMS: " + e.getMessage(), null);
             stage.centerOnScreen();
             stage.show();
             return;
@@ -131,7 +131,7 @@ public class AppNavigator {
         stage.setWidth(1100);
         stage.setHeight(760);
         stage.setResizable(true);
-        mostra(Vista.STARTING);
+        navigaVerso(Vista.STARTING);
         stage.centerOnScreen();
         stage.show();
     }
@@ -177,13 +177,13 @@ public class AppNavigator {
         try {
             return sessioneCorrente.richiediAccountStudente();
         } catch (Exception e) {
-            mostra(Vista.PANNELLO_DI_NOTIFICA, "Effettua prima il login.", (Runnable) () -> mostra(Vista.STARTING));
+            navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Effettua prima il login.", (Runnable) () -> navigaVerso(Vista.STARTING));
             throw e;
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void mostra(Vista vista, Object... dati) {
+    private void navigaVerso(Vista vista, Object... dati) {
         if (vista != Vista.ERRORE_CONNESSIONE
                 && vista != Vista.PANNELLO_DI_NOTIFICA
                 && vista != Vista.PANNELLO_DI_CONFERMA
@@ -194,61 +194,61 @@ public class AppNavigator {
                 && vista != Vista.LINK_GENERATO
                 && vista != Vista.ACCESSO_LINK) {
             Object[] datiCorrenti = dati == null ? new Object[0] : dati.clone();
-            ripristinaSchermataCorrente = () -> mostra(vista, datiCorrenti);
+            ripristinaSchermataCorrente = () -> navigaVerso(vista, datiCorrenti);
         }
         switch (vista) {
             case STARTING -> {
                 sessioneCorrente.terminaSessione();
                 SchermataStartingPage page = new SchermataStartingPage(ui);
 
-                page.pulsanteRegistrati().setOnAction(e -> mostra(Vista.REGISTRAZIONE)); /*Cliccando sul tasto viene
+                page.pulsanteRegistrati().setOnAction(e -> navigaVerso(Vista.REGISTRAZIONE)); /*Cliccando sul tasto viene
                                                                                           mostrata la pagina di registrazione*/
-                page.pulsanteAccedi().setOnAction(e -> mostra(Vista.LOGIN));
-                page.pulsanteEntraComeUtenteEsterno().setOnAction(e -> mostra(Vista.ACCESSO_LINK));
+                page.pulsanteAccedi().setOnAction(e -> navigaVerso(Vista.LOGIN));
+                page.pulsanteEntraComeUtenteEsterno().setOnAction(e -> navigaVerso(Vista.ACCESSO_LINK));
                 setScreen(page.mostra(), "Schermata iniziale");
             }
             case REGISTRAZIONE -> {
-                PaginaDiRegistrazione page = new PaginaDiRegistrazione(ui, () -> mostra(Vista.STARTING));
+                PaginaDiRegistrazione page = new PaginaDiRegistrazione(ui, () -> navigaVerso(Vista.STARTING));
                 page.pulsanteConfermaRegistrazione().setOnAction(e -> {
                     try {
                         registrazioneControl.registra(page.email(), page.password(), page.confermaPassword());
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Registrazione eseguita con successo!",
-                                (Runnable) () -> mostra(Vista.STARTING));
+                        navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Registrazione eseguita con successo!",
+                                (Runnable) () -> navigaVerso(Vista.STARTING));
                     } catch (Exception ex) {
-                        handleError(ex, () -> mostra(Vista.STARTING));
+                        handleError(ex, () -> navigaVerso(Vista.STARTING));
                     }
                 });
                 setScreen(page.mostra(), "Pagina di registrazione");
             }
             case LOGIN -> {
-                PaginaDiLogin page = new PaginaDiLogin(ui, () -> mostra(Vista.STARTING));
+                PaginaDiLogin page = new PaginaDiLogin(ui, () -> navigaVerso(Vista.STARTING));
                 page.pulsanteAccessoConCredenziali().setOnAction(e -> {
                     try {
                         autenticazioneCredenzialiControl.autentica(page.email(), page.password());
-                        mostra(Vista.DUE_FA);
+                        navigaVerso(Vista.DUE_FA);
                     } catch (Exception ex) {
-                        handleError(ex, () -> mostra(Vista.STARTING));
+                        handleError(ex, () -> navigaVerso(Vista.STARTING));
                     }
                 });
-                page.pulsanteLoginEsterno().setOnAction(e -> mostra(Vista.AUTENTICAZIONE_PROVIDER));
-                page.pulsantePasswordDimenticata().setOnAction(e -> mostra(Vista.RECUPERA_PASSWORD));
+                page.pulsanteLoginEsterno().setOnAction(e -> navigaVerso(Vista.AUTENTICAZIONE_PROVIDER));
+                page.pulsantePasswordDimenticata().setOnAction(e -> navigaVerso(Vista.RECUPERA_PASSWORD));
                 setScreen(page.mostra(), "Pagina di login");
             }
             case DUE_FA -> {
-                Pagina2FA page = new Pagina2FA(ui, () -> mostra(Vista.LOGIN));
+                Pagina2FA page = new Pagina2FA(ui, () -> navigaVerso(Vista.LOGIN));
                 page.pulsanteGeneraOTP().setOnAction(e -> runUserAction(() -> {
                     String otp = dueFAControl.generaOTP();
                     String email = sessioneCorrente.accountStudente().map(AccountStudente::email).orElse("");
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Codice OTP simulato inviato a " + email + ":\n\n" + otp);
+                    navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Codice OTP simulato inviato a " + email + ":\n\n" + otp);
                 }));
                 page.pulsanteVerificaOTP().setOnAction(e -> {
                     try {
                         dueFAControl.verificaOTP(page.codiceVerifica());
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Login effettuato!",
-                                (Runnable) () -> mostra(Vista.HOME));
+                        navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Login effettuato!",
+                                (Runnable) () -> navigaVerso(Vista.HOME));
                     } catch (Exception ex) {
                         if ("Numero massimo di tentativi raggiunto. Sessione annullata.".equals(ex.getMessage())) {
-                            handleError(ex, () -> mostra(Vista.STARTING));
+                            handleError(ex, () -> navigaVerso(Vista.STARTING));
                         } else {
                             handleError(ex);
                         }
@@ -257,36 +257,36 @@ public class AppNavigator {
                 setScreen(page.mostra(), "Pagina 2FA");
             }
             case AUTENTICAZIONE_PROVIDER -> {
-                PaginaAutenticazioneProviderEsterno page = new PaginaAutenticazioneProviderEsterno(ui, () -> mostra(Vista.LOGIN));
+                PaginaAutenticazioneProviderEsterno page = new PaginaAutenticazioneProviderEsterno(ui, () -> navigaVerso(Vista.LOGIN));
                 page.pulsanteEsitoPositivoProvider().setOnAction(e -> runUserAction(() -> {
                     autenticazioneEsternaControl.autenticaConProviderEsterno(page.emailProvider());
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Login effettuato!",
-                            (Runnable) () -> mostra(Vista.HOME));
+                    navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Login effettuato!",
+                            (Runnable) () -> navigaVerso(Vista.HOME));
                 }));
                 page.pulsanteEsitoNegativoProvider().setOnAction(e -> {
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Autenticazione tramite provider esterno fallita o annullata.",
-                            (Runnable) () -> mostra(Vista.LOGIN));
+                    navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Autenticazione tramite provider esterno fallita o annullata.",
+                            (Runnable) () -> navigaVerso(Vista.LOGIN));
                 });
                 setScreen(page.mostra(), "Autenticazione con provider esterno");
             }
             case RECUPERA_PASSWORD -> {
-                PaginaRecuperaPassword page = new PaginaRecuperaPassword(ui, () -> mostra(Vista.LOGIN));
+                PaginaRecuperaPassword page = new PaginaRecuperaPassword(ui, () -> navigaVerso(Vista.LOGIN));
                 page.pulsanteInvia().setOnAction(e -> runUserAction(() -> {
                     AccountStudente account = passwordDimenticataControl.richiediRecuperoPassword(page.email());
                     String token = passwordDimenticataControl.generaLinkRipristino(account);
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Link di ripristino inviato. Controlla la tua casella di posta!\nToken: " + token,
-                            (Runnable) () -> mostra(Vista.NUOVA_PASSWORD, account, token));
+                    navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Link di ripristino inviato. Controlla la tua casella di posta!\nToken: " + token,
+                            (Runnable) () -> navigaVerso(Vista.NUOVA_PASSWORD, account, token));
                 }));
                 setScreen(page.mostra(), "Pagina recupera password");
             }
             case NUOVA_PASSWORD -> {
                 AccountStudente account = (AccountStudente) dati[0];
                 String token = (String) dati[1];
-                PaginaNuovaPassword page = new PaginaNuovaPassword(ui, () -> mostra(Vista.LOGIN));
+                PaginaNuovaPassword page = new PaginaNuovaPassword(ui, () -> navigaVerso(Vista.LOGIN));
                 page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                     passwordDimenticataControl.impostaNuovaPassword(account, token, page.nuovaPassword(), page.confermaNuovaPassword());
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Password modificata con successo!",
-                            (Runnable) () -> mostra(Vista.LOGIN));
+                    navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Password modificata con successo!",
+                            (Runnable) () -> navigaVerso(Vista.LOGIN));
                 }));
                 setScreen(page.mostra(), "Pagina nuova password");
             }
@@ -294,8 +294,8 @@ public class AppNavigator {
                 AccountStudente account = requireStudent();
                 SchermataHomePage page = new SchermataHomePage(ui);
                 Parent root = page.mostra(account);
-                page.pulsanteGestioneProfilo().setOnAction(e -> mostra(Vista.GESTIONE_PROFILO));
-                page.pulsanteGestioneCondivisione().setOnAction(e -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                page.pulsanteGestioneProfilo().setOnAction(e -> navigaVerso(Vista.GESTIONE_PROFILO));
+                page.pulsanteGestioneCondivisione().setOnAction(e -> navigaVerso(Vista.GESTIONE_CONDIVISIONE));
                 page.pulsanteLogout().setOnAction(e -> confermaLogout());
                 setScreen(root, "Home page");
             }
@@ -343,7 +343,7 @@ public class AppNavigator {
                 try {
                     DatiCurriculari datiCurriculari = modificaDatiCurriculariControl.recuperaDatiCurriculari(account);
                     ObservableList<ContenutoMultimediale> contenuti = FXCollections.observableArrayList(aggiungiContenutiControl.recuperaContenuti(account));
-                    SchermataGestioneProfilo page = new SchermataGestioneProfilo(ui, () -> mostra(Vista.HOME));
+                    SchermataGestioneProfilo page = new SchermataGestioneProfilo(ui, () -> navigaVerso(Vista.HOME));
                     Parent root = page.mostra(datiCurriculari, contenuti);
                     page.listaContenuti().setOnMouseClicked(event -> {
                         if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
@@ -351,13 +351,13 @@ public class AppNavigator {
                             if (item != null) ui.openFile(item.percorsoFile());
                         }
                     });
-                    page.pulsanteAggiungiContenuti().setOnAction(e -> mostra(Vista.AGGIUNGI_CONTENUTI));
+                    page.pulsanteAggiungiContenuti().setOnAction(e -> navigaVerso(Vista.AGGIUNGI_CONTENUTI));
                     page.pulsanteEliminaContenuti().setDisable(contenuti.isEmpty());
-                    page.pulsanteEliminaContenuti().setOnAction(e -> mostra(Vista.CONTENUTI_ELIMINABILI));
+                    page.pulsanteEliminaContenuti().setOnAction(e -> navigaVerso(Vista.CONTENUTI_ELIMINABILI));
                     page.pulsanteOrganizzaContenuti().setDisable(contenuti.size() < 2);
-                    page.pulsanteOrganizzaContenuti().setOnAction(e -> mostra(Vista.ORGANIZZA_CONTENUTI));
-                    page.pulsanteModificaDatiCurriculari().setOnAction(e -> mostra(Vista.MODIFICA_DATI_CURRICULARI));
-                    page.pulsanteModificaPassword().setOnAction(e -> mostra(Vista.MODIFICA_PASSWORD));
+                    page.pulsanteOrganizzaContenuti().setOnAction(e -> navigaVerso(Vista.ORGANIZZA_CONTENUTI));
+                    page.pulsanteModificaDatiCurriculari().setOnAction(e -> navigaVerso(Vista.MODIFICA_DATI_CURRICULARI));
+                    page.pulsanteModificaPassword().setOnAction(e -> navigaVerso(Vista.MODIFICA_PASSWORD));
                     setScreen(root, "Gestione profilo");
                 } catch (Exception ex) {
                     handleError(ex);
@@ -369,7 +369,7 @@ public class AppNavigator {
                 page.pulsanteAggiungiAudio().setOnAction(e -> selezionaECaricaFile("Audio"));
                 page.pulsanteAggiungiFoto().setOnAction(e -> selezionaECaricaFile("Foto"));
                 page.pulsanteAggiungiVideo().setOnAction(e -> selezionaECaricaFile("Video"));
-                page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.GESTIONE_PROFILO));
+                page.pulsanteAnnulla().setOnAction(e -> navigaVerso(Vista.GESTIONE_PROFILO));
                 setPopup(page.mostra());
             }
             case CONTENUTI_ELIMINABILI -> {
@@ -380,15 +380,15 @@ public class AppNavigator {
                     page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                         List<ContenutoMultimediale> selezionati = new ArrayList<>(page.listaContenutiEliminabili().getSelectionModel().getSelectedItems());
                         if (selezionati.isEmpty()) {
-                            mostra(Vista.PANNELLO_DI_NOTIFICA, "Selezionare almeno un contenuto per procedere",
-                                    (Runnable) () -> mostra(Vista.CONTENUTI_ELIMINABILI));
+                            navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Selezionare almeno un contenuto per procedere",
+                                    (Runnable) () -> navigaVerso(Vista.CONTENUTI_ELIMINABILI));
                         } else {
                             eliminaContenutiControl.eliminaContenuti(selezionati);
-                            mostra(Vista.PANNELLO_DI_NOTIFICA, "Eliminazione avvenuta con successo!",
-                                    (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
+                            navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Eliminazione avvenuta con successo!",
+                                    (Runnable) () -> navigaVerso(Vista.GESTIONE_PROFILO));
                         }
                     }));
-                    page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.GESTIONE_PROFILO));
+                    page.pulsanteAnnulla().setOnAction(e -> navigaVerso(Vista.GESTIONE_PROFILO));
                     setPopup(root);
                 } catch (Exception ex) {
                     handleError(ex);
@@ -397,16 +397,16 @@ public class AppNavigator {
             case ORGANIZZA_CONTENUTI -> {
                 try {
                     ObservableList<ContenutoMultimediale> items = FXCollections.observableArrayList(organizzaContenutiControl.recuperaContenuti(requireStudent()));
-                    PaginaOrganizzaContenuti page = new PaginaOrganizzaContenuti(ui, () -> mostra(Vista.GESTIONE_PROFILO));
+                    PaginaOrganizzaContenuti page = new PaginaOrganizzaContenuti(ui, () -> navigaVerso(Vista.GESTIONE_PROFILO));
                     Parent root = page.mostra(items);
                     page.pulsanteSpostaSu().setOnAction(e -> page.spostaSelezionato(-1));
                     page.pulsanteSpostaGiu().setOnAction(e -> page.spostaSelezionato(1));
                     page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                         organizzaContenutiControl.salvaNuovoOrdine(new ArrayList<>(items));
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Modifica effettuata!",
-                                (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
+                        navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Modifica effettuata!",
+                                (Runnable) () -> navigaVerso(Vista.GESTIONE_PROFILO));
                     }));
-                    page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.GESTIONE_PROFILO));
+                    page.pulsanteAnnulla().setOnAction(e -> navigaVerso(Vista.GESTIONE_PROFILO));
                     setScreen(root, "Organizza contenuti");
                 } catch (Exception ex) {
                     handleError(ex);
@@ -415,54 +415,54 @@ public class AppNavigator {
             case MODIFICA_DATI_CURRICULARI -> {
                 try {
                     DatiCurriculari datiCurriculari = modificaDatiCurriculariControl.recuperaDatiCurriculari(requireStudent());
-                    PaginaModificaDatiCurriculari page = new PaginaModificaDatiCurriculari(ui, () -> mostra(Vista.GESTIONE_PROFILO));
+                    PaginaModificaDatiCurriculari page = new PaginaModificaDatiCurriculari(ui, () -> navigaVerso(Vista.GESTIONE_PROFILO));
                     Parent root = page.mostra(datiCurriculari);
                     page.pulsanteSalva().setOnAction(e -> runUserAction(() -> {
                         modificaDatiCurriculariControl.salvaDatiCurriculari(requireStudent(), page.biografia(), page.titoliDiStudio(), page.esperienzeArtisticheEFormative());
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Dati curriculari aggiornati con successo",
-                                (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
+                        navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Dati curriculari aggiornati con successo",
+                                (Runnable) () -> navigaVerso(Vista.GESTIONE_PROFILO));
                     }));
-                    page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.GESTIONE_PROFILO));
+                    page.pulsanteAnnulla().setOnAction(e -> navigaVerso(Vista.GESTIONE_PROFILO));
                     setScreen(root, "Modifica dati curriculari");
                 } catch (Exception ex) {
                     handleError(ex);
                 }
             }
             case MODIFICA_PASSWORD -> {
-                PaginaModificaPassword page = new PaginaModificaPassword(ui, () -> mostra(Vista.GESTIONE_PROFILO));
+                PaginaModificaPassword page = new PaginaModificaPassword(ui, () -> navigaVerso(Vista.GESTIONE_PROFILO));
                 page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                     modificaPasswordControl.modificaPassword(page.vecchiaPassword(), page.nuovaPassword(), page.confermaNuovaPassword());
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Modifica avvenuta con successo",
-                            (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
+                    navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Modifica avvenuta con successo",
+                            (Runnable) () -> navigaVerso(Vista.GESTIONE_PROFILO));
                 }));
-                page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.GESTIONE_PROFILO));
+                page.pulsanteAnnulla().setOnAction(e -> navigaVerso(Vista.GESTIONE_PROFILO));
                 setScreen(page.mostra(), "Modifica password");
             }
             case GESTIONE_CONDIVISIONE -> {
                 try {
                     AccountStudente account = requireStudent();
-                    SchermataGestioneCondivisione page = new SchermataGestioneCondivisione(ui, () -> mostra(Vista.HOME));
+                    SchermataGestioneCondivisione page = new SchermataGestioneCondivisione(ui, () -> navigaVerso(Vista.HOME));
                     List<LinkDiCondivisione> links = feedbackContenutiControl.recuperaLink(account);
-                    page.pulsanteGeneraLink().setOnAction(e -> mostra(Vista.CONTENUTI_VISUALIZZABILI));
+                    page.pulsanteGeneraLink().setOnAction(e -> navigaVerso(Vista.CONTENUTI_VISUALIZZABILI));
                     page.pulsanteFeedbackContenuti().setDisable(links.isEmpty());
-                    page.pulsanteFeedbackContenuti().setOnAction(e -> mostra(Vista.FEEDBACK_CONTENUTI));
-                    page.pulsanteDisattivaLink().setOnAction(e -> mostra(Vista.LISTA_LINK_ATTIVI));
+                    page.pulsanteFeedbackContenuti().setOnAction(e -> navigaVerso(Vista.FEEDBACK_CONTENUTI));
+                    page.pulsanteDisattivaLink().setOnAction(e -> navigaVerso(Vista.LISTA_LINK_ATTIVI));
                     setScreen(page.mostra(), "Gestione condivisione");
                 } catch (Exception ex) {
                     handleError(ex);
                 }
             }
             case CONTENUTI_VISUALIZZABILI -> {
-                PaginaContenutiVisualizzabili page = new PaginaContenutiVisualizzabili(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
-                page.pulsanteSelezionaContenuti().setOnAction(e -> mostra(Vista.PANNELLO_CONTENUTI_VISUALIZZABILI));
+                PaginaContenutiVisualizzabili page = new PaginaContenutiVisualizzabili(ui, () -> navigaVerso(Vista.GESTIONE_CONDIVISIONE));
+                page.pulsanteSelezionaContenuti().setOnAction(e -> navigaVerso(Vista.PANNELLO_CONTENUTI_VISUALIZZABILI));
                 setScreen(page.mostra(), "Contenuti visualizzabili");
             }
             case PANNELLO_CONTENUTI_VISUALIZZABILI -> {
                 try {
                     ObservableList<ContenutoMultimediale> contents = FXCollections.observableArrayList(contenutiVisualizzabiliControl.recuperaContenutiDisponibili(requireStudent()));
                     if (contents.isEmpty()) {
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Carica almeno un contenuto prima di generare un link.",
-                                (Runnable) () -> mostra(Vista.CONTENUTI_VISUALIZZABILI));
+                        navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Carica almeno un contenuto prima di generare un link.",
+                                (Runnable) () -> navigaVerso(Vista.CONTENUTI_VISUALIZZABILI));
                         return;
                     }
                     PannelloContenutiVisualizzabili page = new PannelloContenutiVisualizzabili(ui);
@@ -470,13 +470,13 @@ public class AppNavigator {
                     page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                         List<ContenutoMultimediale> selected = page.contenutiSelezionati();
                         contenutiVisualizzabiliControl.verificaSelezione(selected);
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Selezione avvenuta con successo!",
-                                (Runnable) () -> mostra(Vista.PARAMETRI_FACOLTATIVI, selected));
+                        navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Selezione avvenuta con successo!",
+                                (Runnable) () -> navigaVerso(Vista.PARAMETRI_FACOLTATIVI, selected));
                     }));
-                    page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.CONTENUTI_VISUALIZZABILI));
+                    page.pulsanteAnnulla().setOnAction(e -> navigaVerso(Vista.CONTENUTI_VISUALIZZABILI));
                     setPopup(root);
                 } catch (Exception ex) {
-                    handleError(ex, () -> mostra(Vista.CONTENUTI_VISUALIZZABILI));
+                    handleError(ex, () -> navigaVerso(Vista.CONTENUTI_VISUALIZZABILI));
                 }
             }
             case PARAMETRI_FACOLTATIVI -> {
@@ -484,9 +484,9 @@ public class AppNavigator {
                 PannelloParametriFacoltativi page = new PannelloParametriFacoltativi(ui);
                 page.pulsanteConferma().setOnAction(e -> runUserAction(() -> {
                     LinkDiCondivisione link = creazioneLinkControl.generaLink(requireStudent(), contenutiSelezionati, page.descrizione(), page.dataDiScadenza());
-                    mostra(Vista.LINK_GENERATO, link);
+                    navigaVerso(Vista.LINK_GENERATO, link);
                 }));
-                page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                page.pulsanteAnnulla().setOnAction(e -> navigaVerso(Vista.GESTIONE_CONDIVISIONE));
                 setPopup(page.mostra());
             }
             case LINK_GENERATO -> {
@@ -497,8 +497,8 @@ public class AppNavigator {
                     ClipboardContent content = new ClipboardContent();
                     content.putString(page.linkGenerato());
                     Clipboard.getSystemClipboard().setContent(content);
-                    mostra(Vista.PANNELLO_DI_NOTIFICA, "Link copiato!",
-                            (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                    navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Link copiato!",
+                            (Runnable) () -> navigaVerso(Vista.GESTIONE_CONDIVISIONE));
                 });
                 setPopup(root);
             }
@@ -507,11 +507,11 @@ public class AppNavigator {
                     ObservableList<LinkDiCondivisione> links = FXCollections.observableArrayList(feedbackContenutiControl.recuperaLink(requireStudent()));
                     int visualizzazioniTotali = links.stream().mapToInt(LinkDiCondivisione::numeroVisualizzazioni).sum();
                     if (visualizzazioniTotali == 0) {
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "I tuoi contenuti non sono ancora stati visualizzati.",
-                                (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                        navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "I tuoi contenuti non sono ancora stati visualizzati.",
+                                (Runnable) () -> navigaVerso(Vista.GESTIONE_CONDIVISIONE));
                         return;
                     }
-                    PaginaFeedbackContenuti page = new PaginaFeedbackContenuti(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                    PaginaFeedbackContenuti page = new PaginaFeedbackContenuti(ui, () -> navigaVerso(Vista.GESTIONE_CONDIVISIONE));
                     Parent root = page.mostra(links);
                     setScreen(root, "Feedback contenuti");
                 } catch (Exception ex) {
@@ -522,16 +522,16 @@ public class AppNavigator {
                 try {
                     ObservableList<LinkDiCondivisione> links = FXCollections.observableArrayList(disattivaLinkControl.recuperaLink(requireStudent()));
                     if (links.isEmpty()) {
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Nessun link attivo presente.",
-                                (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                        navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Nessun link attivo presente.",
+                                (Runnable) () -> navigaVerso(Vista.GESTIONE_CONDIVISIONE));
                         return;
                     }
-                    PaginaLinkAttivi page = new PaginaLinkAttivi(ui, () -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                    PaginaLinkAttivi page = new PaginaLinkAttivi(ui, () -> navigaVerso(Vista.GESTIONE_CONDIVISIONE));
                     Parent root = page.mostra(links);
                     page.pulsanteElimina().setOnAction(e -> runUserAction(() -> {
                         disattivaLinkControl.disattivaLink(page.listaLinkAttivi().getSelectionModel().getSelectedItem());
-                        mostra(Vista.PANNELLO_DI_NOTIFICA, "Link disattivato con successo.",
-                                (Runnable) () -> mostra(Vista.GESTIONE_CONDIVISIONE));
+                        navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Link disattivato con successo.",
+                                (Runnable) () -> navigaVerso(Vista.GESTIONE_CONDIVISIONE));
                     }));
                     setScreen(root, "Link attivi");
                 } catch (Exception ex) {
@@ -543,19 +543,19 @@ public class AppNavigator {
                 page.pulsanteConferma().setOnAction(e -> {
                     try {
                         LinkDiCondivisione link = visualizzazioneContenutiControl.validaLink(page.linkInserito());
-                        mostra(Vista.CONTENUTI_CONDIVISI, link);
+                        navigaVerso(Vista.CONTENUTI_CONDIVISI, link);
                     } catch (Exception ex) {
-                        handleError(ex, () -> mostra(Vista.STARTING));
+                        handleError(ex, () -> navigaVerso(Vista.STARTING));
                     }
                 });
-                page.pulsanteAnnulla().setOnAction(e -> mostra(Vista.STARTING));
+                page.pulsanteAnnulla().setOnAction(e -> navigaVerso(Vista.STARTING));
                 setPopup(page.mostra());
             }
             case CONTENUTI_CONDIVISI -> {
                 LinkDiCondivisione link = (LinkDiCondivisione) dati[0];
                 try {
                     PortfolioCondiviso portfolio = visualizzazioneContenutiControl.recuperaPortfolioCondiviso(link);
-                    SchermataContenutiCondivisi page = new SchermataContenutiCondivisi(ui, () -> mostra(Vista.STARTING));
+                    SchermataContenutiCondivisi page = new SchermataContenutiCondivisi(ui, () -> navigaVerso(Vista.STARTING));
                     Parent root = page.mostra(portfolio);
                     page.listaContenutiMultimediali().setOnMouseClicked(event -> {
                         if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
@@ -563,7 +563,7 @@ public class AppNavigator {
                             if (item != null) ui.openFile(item.percorsoFile());
                         }
                     });
-                    page.pulsanteTornaAllaSchermataIniziale().setOnAction(e -> mostra(Vista.STARTING));
+                    page.pulsanteTornaAllaSchermataIniziale().setOnAction(e -> navigaVerso(Vista.STARTING));
                     setScreen(root, "Contenuti condivisi");
                 } catch (Exception ex) {
                     handleError(ex);
@@ -573,11 +573,11 @@ public class AppNavigator {
     }
 
     private void confermaLogout() { //gestito come metodo e non come case (page) perché non esiste una pagina di logout
-        mostra(Vista.PANNELLO_DI_CONFERMA, "Desideri effettuare il logout?", (Runnable) () -> {
+        navigaVerso(Vista.PANNELLO_DI_CONFERMA, "Desideri effettuare il logout?", (Runnable) () -> {
             runUserAction(() -> {
                 logoutControl.eseguiLogout();
-                mostra(Vista.PANNELLO_DI_NOTIFICA, "Logout effettuato con successo.",
-                        (Runnable) () -> mostra(Vista.STARTING));
+                navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Logout effettuato con successo.",
+                        (Runnable) () -> navigaVerso(Vista.STARTING));
             });
         }, null);
     }
@@ -590,8 +590,8 @@ public class AppNavigator {
         if (file != null) {
             runUserAction(() -> {
                 aggiungiContenutiControl.aggiungiContenuto(requireStudent(), file.toPath());
-                mostra(Vista.PANNELLO_DI_NOTIFICA, "Caricamento avvenuto con successo",
-                        (Runnable) () -> mostra(Vista.GESTIONE_PROFILO));
+                navigaVerso(Vista.PANNELLO_DI_NOTIFICA, "Caricamento avvenuto con successo",
+                        (Runnable) () -> navigaVerso(Vista.GESTIONE_PROFILO));
             });
         }
     }
@@ -620,9 +620,9 @@ public class AppNavigator {
 
     private void handleError(Exception ex, Runnable azioneDopoOk) {
         if (ex instanceof ApplicationException) {
-            mostra(Vista.PANNELLO_DI_NOTIFICA, ex.getMessage(), azioneDopoOk);
+            navigaVerso(Vista.PANNELLO_DI_NOTIFICA, ex.getMessage(), azioneDopoOk);
         } else {
-            mostra(Vista.PANNELLO_DI_NOTIFICA, ex.getMessage() == null ? ex.toString() : ex.getMessage(), azioneDopoOk);
+            navigaVerso(Vista.PANNELLO_DI_NOTIFICA, ex.getMessage() == null ? ex.toString() : ex.getMessage(), azioneDopoOk);
         }
     }
 
