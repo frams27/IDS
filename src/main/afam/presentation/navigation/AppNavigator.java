@@ -309,7 +309,7 @@ public class AppNavigator {
             case PANNELLO_DI_NOTIFICA -> {
                 String messaggio = (String) dati[0];
                 Runnable azioneDopoOk = dati.length > 1 ? (Runnable) dati[1] : null;
-                PannelloDiNotifica page = new PannelloDiNotifica(ui, messaggio);
+                PannelloDiNotifica page = new PannelloDiNotifica(ui);
                 page.pulsanteOk().setOnAction(e -> {
                     if (azioneDopoOk != null) {
                         azioneDopoOk.run();
@@ -317,13 +317,13 @@ public class AppNavigator {
                         ripristinaSchermataCorrente.run();
                     }
                 });
-                setPopup(page.mostra());
+                setPopup(page.mostra(messaggio));
             }
             case PANNELLO_DI_CONFERMA -> {
                 String messaggio = (String) dati[0];
                 Runnable azioneConferma = (Runnable) dati[1];
                 Runnable azioneAnnulla = dati.length > 2 ? (Runnable) dati[2] : null;
-                PannelloDiConferma page = new PannelloDiConferma(ui, messaggio);
+                PannelloDiConferma page = new PannelloDiConferma(ui);
                 page.pulsanteConferma().setOnAction(e -> {
                     if (azioneConferma != null) {
                         azioneConferma.run();
@@ -336,7 +336,7 @@ public class AppNavigator {
                         ripristinaSchermataCorrente.run();
                     }
                 });
-                setPopup(page.mostra());
+                setPopup(page.mostra(messaggio));
             }
             case GESTIONE_PROFILO -> {
                 AccountStudente account = requireStudent();

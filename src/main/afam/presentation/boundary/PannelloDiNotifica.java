@@ -7,25 +7,21 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 public class PannelloDiNotifica {
-    private final Parent root;
     private final Button pulsanteOk;
 
-    public PannelloDiNotifica(UiFactory ui, String messaggio) {
-        //qui inseriramo il titolo del pannello di notifica
+    public PannelloDiNotifica(UiFactory ui) {
+        this.pulsanteOk = ui.button("OK", "primary");
+    }
+
+    public Parent mostra(String messaggio) {
         Label titoloNotifica = new Label("Pannello di Notifica");
         titoloNotifica.getStyleClass().add("popup-title");
-        //qui inseriamo il messaggio di notifica
         Label testoMessaggio = new Label(messaggio);
         testoMessaggio.setWrapText(true);
         testoMessaggio.setMaxWidth(Double.MAX_VALUE);
-        this.pulsanteOk = ui.button("OK", "primary");
         VBox panel = new VBox(14, titoloNotifica, testoMessaggio, pulsanteOk);
         panel.getStyleClass().add("popup-card");
-        this.root = panel;
-    }
-
-    public Parent mostra() {
-        return root;
+        return panel;
     }
 
 
